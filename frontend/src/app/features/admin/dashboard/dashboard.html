@@ -1,0 +1,277 @@
+<p>dashboard works!</p>
+<div class="dashboard">
+
+    <header class="appbar">
+
+        <button class="menu-btn" (click)="toggleSidebar()">
+
+            <mat-icon>menu</mat-icon>
+
+        </button>
+
+        <div class="admin-title">
+
+            Admin
+
+        </div>
+
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" [class.close]="!isSidebarOpen">
+
+        <h2>🍽 FoodieQR</h2>
+
+        <ul>
+
+            <li class="active" (click)="openPage('dashboard')">
+
+                <mat-icon>dashboard</mat-icon>
+
+                <span *ngIf="isSidebarOpen">
+                    Dashboard
+                </span>
+
+            </li>
+
+            <li (click)="openPage('orders')">
+
+                <mat-icon>receipt_long</mat-icon>
+
+                <span *ngIf="isSidebarOpen">
+                    Orders
+                </span>
+
+            </li>
+
+            <li (click)="openPage('menu')">
+
+                <mat-icon>restaurant_menu</mat-icon>
+
+                <span *ngIf="isSidebarOpen">
+                    Menu
+                </span>
+
+            </li>
+
+            <li (click)="openPage('categories')">
+
+                <mat-icon>category</mat-icon>
+
+                <span *ngIf="isSidebarOpen">
+                    Categories
+                </span>
+
+            </li>
+
+            <li (click)="openPage('settings')">
+
+                <mat-icon>settings</mat-icon>
+
+                <span *ngIf="isSidebarOpen">
+                    Settings
+                </span>
+
+            </li>
+
+            <li (click)="logout()">
+
+                <mat-icon>logout</mat-icon>
+
+                <span *ngIf="isSidebarOpen">
+                    Logout
+                </span>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- Main -->
+
+    <main class="content">
+
+        <!-- DASHBOARD -->
+
+        <div *ngIf="selectedPage=='dashboard'">
+
+            <h1>Dashboard</h1>
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <h3>Today's Orders</h3>
+
+                    <h1>15</h1>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Revenue</h3>
+
+                    <h1>₹6,500</h1>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Pending</h3>
+
+                    <h1>5</h1>
+
+                </div>
+
+                <div class="card">
+
+                    <h3>Completed</h3>
+
+                    <h1>10</h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ORDERS -->
+
+        <div *ngIf="selectedPage=='orders'">
+
+            <h1>Orders</h1>
+
+            <mat-tab-group>
+
+                <mat-tab label="New Orders">
+
+                    <p>No new orders.</p>
+
+                </mat-tab>
+
+                <mat-tab label="Ongoing">
+
+                    <p>No ongoing orders.</p>
+
+                </mat-tab>
+
+                <mat-tab label="Past Orders">
+
+                    <p>No past orders.</p>
+
+                </mat-tab>
+
+            </mat-tab-group>
+
+        </div>
+
+        <!-- MENU -->
+
+        <div *ngIf="selectedPage=='menu'">
+
+            <div class="page-header">
+
+                <h1>Existing Menu</h1>
+
+                <button>Add Item</button>
+
+            </div>
+
+            <table>
+
+                <tr>
+
+                    <th>Image</th>
+
+                    <th>Food</th>
+
+                    <th>Category</th>
+
+                    <th>Price</th>
+
+                    <th>Edit</th>
+
+                    <th>Delete</th>
+
+                </tr>
+
+                <tr>
+
+                    <td>🍕</td>
+
+                    <td>Cheese Pizza</td>
+
+                    <td>Pizza</td>
+
+                    <td>₹250</td>
+
+                    <td><button>Edit</button></td>
+
+                    <td><button>Delete</button></td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <!-- CATEGORIES -->
+
+        <div *ngIf="selectedPage=='categories'">
+
+            <div class="page-header">
+
+                <h1>Categories</h1>
+
+                <button>Add Category</button>
+
+            </div>
+
+            <table>
+
+                <tr>
+
+                    <th>Name</th>
+
+                    <th>Edit</th>
+
+                    <th>Delete</th>
+
+                </tr>
+
+                <tr>
+
+                    <td>Pizza</td>
+
+                    <td><button>Edit</button></td>
+
+                    <td><button>Delete</button></td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+        <!-- SETTINGS -->
+
+        <div *ngIf="selectedPage=='settings'">
+
+            <h1>Restaurant Settings</h1>
+
+            <input placeholder="Restaurant Name">
+
+            <input placeholder="Admin Name">
+
+            <input placeholder="Username">
+
+            <input placeholder="Password">
+
+            <button>Save</button>
+
+        </div>
+
+    </main>
+
+</div>
