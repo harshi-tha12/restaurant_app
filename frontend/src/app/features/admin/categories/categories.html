@@ -1,1 +1,171 @@
-<p>add-items works!</p>
+<div class="categories-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Manage Categories & Items</h1>
+    <button class="btn-add-category" (click)="openCategoryForm()">
+      <span class="icon">+</span> Add Category
+    </button>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    ✅ {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-error">
+    ❌ {{ errorMessage }}
+  </div>
+
+  <!-- Categories Grid -->
+  <div class="categories-grid">
+    <div *ngFor="let category of categories" class="category-card">
+      <!-- Category Header -->
+      <div class="category-header">
+        <h2>{{ category.name }}</h2>
+        <button class="btn-delete-category" (click)="deleteCategory(category.id)" title="Delete category">
+          🗑️
+        </button>
+      </div>
+
+      <!-- Items Container -->
+      <div class="items-container">
+        <!-- Items Grid -->
+        <div *ngFor="let item of category.items" class="item-card">
+          <div class="item-image">
+            <img *ngIf="item.image" [src]="'data:image/jpeg;base64,' + item.image" alt="{{ item.name }}" />
+            <div *ngIf="!item.image" class="no-image">📷</div>
+          </div>
+          <div class="item-details">
+            <h3>{{ item.name }}</h3>
+            <p class="price">₹{{ item.price }}</p>
+            <p class="ingredients" *ngIf="item.ingredients">
+              <strong>Ingredients:</strong> {{ item.ingredients }}
+            </p>
+          </div>
+          <button class="btn-delete-item" (click)="deleteItem(category.id, item.id)" title="Delete item">
+            ✕
+          </button>
+        </div>
+
+        <!-- Add Item Button -->
+        <button class="item-card add-item-btn" (click)="openItemForm(category.id)">
+          <div class="add-item-icon">+</div>
+          <p>Add Item</p>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Category Form Modal -->
+  <div *ngIf="showCategoryForm" class="modal-overlay" (click)="closeCategoryForm()">
+    <div class="modal-content category-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Add New Category</h2>
+        <button class="btn-close" (click)="closeCategoryForm()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Category Name -->
+        <div class="form-group">
+          <label for="categoryName">Category Name</label>
+          <input
+            type="text"
+            id="categoryName"
+            [(ngModel)]="categoryForm.name"
+            placeholder="e.g., Pizza, Burgers, Desserts"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeCategoryForm()">Cancel</button>
+        <button class="btn btn-primary" (click)="addCategory()" [disabled]="isLoading">
+          {{ isLoading ? 'Adding...' : 'Add Category' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Item Form Modal -->
+  <div *ngIf="showItemForm" class="modal-overlay" (click)="closeItemForm()">
+    <div class="modal-content item-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Add New Item</h2>
+        <button class="btn-close" (click)="closeItemForm()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Dish Name -->
+        <div class="form-group">
+          <label for="dishName">Dish Name *</label>
+          <input
+            type="text"
+            id="dishName"
+            [(ngModel)]="itemForm.name"
+            placeholder="e.g., Cheese Pizza, Margherita"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Ingredients -->
+        <div class="form-group">
+          <label>Ingredients (Minimum 3, Maximum 6) *</label>
+          <div class="ingredients-list">
+            <div *ngFor="let ing of itemForm.ingredients; let i = index" class="ingredient-input">
+              <input
+                type="text"
+                [(ngModel)]="itemForm.ingredients[i]"
+                [placeholder]="'Ingredient ' + (i + 1)"
+                class="form-control"
+              />
+              <span *ngIf="itemForm.ingredients[i]" class="ingredient-badge">✓</span>
+            </div>
+          </div>
+          <small class="form-text">
+            Filled: {{ itemForm.ingredients.filter(ing => ing.trim()).length }}/6
+          </small>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label for="itemPrice">Price (₹) *</label>
+          <input
+            type="number"
+            id="itemPrice"
+            [(ngModel)]="itemForm.price"
+            placeholder="e.g., 250"
+            class="form-control"
+            min="0"
+          />
+        </div>
+
+        <!-- Item Image -->
+        <div class="form-group">
+          <label for="itemImage">Item Image *</label>
+          <div class="image-upload">
+            <input
+              type="file"
+              id="itemImage"
+              accept="image/*"
+              (change)="onItemImageSelect($event)"
+              class="file-input"
+            />
+            <label for="itemImage" class="upload-label">
+              📸 Choose Image
+            </label>
+          </div>
+          <div *ngIf="itemImagePreview" class="image-preview">
+            <img [src]="itemImagePreview" alt="Preview" />
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeItemForm()">Cancel</button>
+        <button class="btn btn-primary" (click)="addItem()" [disabled]="isLoading">
+          {{ isLoading ? 'Adding...' : 'Add Item' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

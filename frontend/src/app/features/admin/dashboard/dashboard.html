@@ -24,7 +24,7 @@
 
         <ul>
 
-            <li class="active" (click)="openPage('dashboard')">
+            <li [class.active]="selectedPage === 'dashboard'" (click)="openPage('dashboard')">
 
                 <mat-icon>dashboard</mat-icon>
 
@@ -34,7 +34,7 @@
 
             </li>
 
-            <li (click)="openPage('orders')">
+            <li [class.active]="selectedPage === 'orders'" (click)="openPage('orders')">
 
                 <mat-icon>receipt_long</mat-icon>
 
@@ -44,7 +44,7 @@
 
             </li>
 
-            <li (click)="openPage('menu')">
+            <li [class.active]="selectedPage === 'menu'" (click)="openPage('menu')">
 
                 <mat-icon>restaurant_menu</mat-icon>
 
@@ -54,7 +54,7 @@
 
             </li>
 
-            <li (click)="openPage('categories')">
+            <li [class.active]="selectedPage === 'categories'" (click)="openPage('categories')">
 
                 <mat-icon>category</mat-icon>
 
@@ -64,7 +64,7 @@
 
             </li>
 
-            <li (click)="openPage('settings')">
+            <li [class.active]="selectedPage === 'settings'" (click)="openPage('settings')">
 
                 <mat-icon>settings</mat-icon>
 
@@ -218,41 +218,7 @@
 
         <!-- CATEGORIES -->
 
-        <div *ngIf="selectedPage=='categories'">
-
-            <div class="page-header">
-
-                <h1>Categories</h1>
-
-                <button>Add Category</button>
-
-            </div>
-
-            <table>
-
-                <tr>
-
-                    <th>Name</th>
-
-                    <th>Edit</th>
-
-                    <th>Delete</th>
-
-                </tr>
-
-                <tr>
-
-                    <td>Pizza</td>
-
-                    <td><button>Edit</button></td>
-
-                    <td><button>Delete</button></td>
-
-                </tr>
-
-            </table>
-
-        </div>
+        <app-categories *ngIf="selectedPage=='categories'"></app-categories>
 
         <!-- SETTINGS -->
 

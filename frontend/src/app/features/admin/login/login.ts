@@ -34,25 +34,23 @@ export class Login {
 
     }).subscribe({
 
-  next: (res: any) => {
+      next: (res: any) => {
 
-    console.log("Response:", res);
+        alert(res.message);
 
-    alert(JSON.stringify(res));
+        this.router.navigate(['/admin/dashboard']);
 
-    this.router.navigate(['/admin/dashboard']);
+      },
 
-  },
+      error: (err) => {
 
-  error: (err) => {
+        alert(err.error.message);
 
-    console.log("Error:", err);
+      }
 
-    alert(err.error?.message || "Login Failed");
+      
 
-  }
-
-});
+    });
 
     
 
