@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 import { Categories } from '../categories/categories';
 import { Settings } from '../settings/settings';
+import { ReloadService } from '../../../services/reload.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +17,7 @@ import { Settings } from '../settings/settings';
 export class Dashboard implements OnInit {
 
   private router = inject(Router);
+  private reloadService = inject(ReloadService);
   isSidebarOpen = true;
 
   selectedPage = 'dashboard';
@@ -29,6 +31,11 @@ export class Dashboard implements OnInit {
 
   openPage(page: string) {
     this.selectedPage = page;
+    
+    // Trigger reload for categories when switching to that page
+    if (page === 'categories') {
+      setTimeout(() => this.reloadService.triggerReloadCategories(), 0);
+    }
   }
 
   ngOnInit() {
@@ -40,7 +47,6 @@ export class Dashboard implements OnInit {
         this.adminName = admin.admin_name || admin.full_name || 'Admin';
         this.restaurantName = admin.restaurant_name || 'Restaurant';
         this.adminId = admin.id || 1;
-        // Store adminId globally for services
         localStorage.setItem('adminId', this.adminId.toString());
       } catch (e) {
         console.log('Error parsing admin data');

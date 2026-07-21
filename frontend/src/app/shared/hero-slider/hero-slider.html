@@ -1,13 +1,44 @@
-<div class="hero">
-
-    <img [src]="images[currentImage]" alt="Restaurant Banner">
-
-    <div class="overlay">
-
-        <h1>Fresh Food, Fast Service</h1>
-
-        <p>Scan • Order • Enjoy</p>
-
+<div class="hero-slider-container">
+  <!-- Main Slider -->
+  <div class="hero-slider">
+    <!-- Images -->
+    <div class="slider-wrapper">
+      <div 
+        *ngFor="let image of images; let i = index"
+        class="slide"
+        [class.active]="i === currentImage"
+      >
+        <img 
+          [src]="image" 
+          alt="Hero image {{ i + 1 }}"
+          class="slide-image"
+        />
+      </div>
     </div>
 
+    <!-- Navigation Arrows -->
+    <button class="nav-btn nav-prev" (click)="prevImage()" aria-label="Previous slide">
+      ❮
+    </button>
+    <button class="nav-btn nav-next" (click)="nextImage()" aria-label="Next slide">
+      ❯
+    </button>
+
+    <!-- Dots/Indicators -->
+    <div class="slider-indicators">
+      <button 
+        *ngFor="let image of images; let i = index"
+        class="indicator"
+        [class.active]="i === currentImage"
+        (click)="goToImage(i)"
+        [attr.aria-label]="'Go to slide ' + (i + 1)"
+      ></button>
+    </div>
+
+    <!-- Overlay Text -->
+    <div class="hero-overlay">
+      <h1 class="hero-title">Welcome to FoodieQR</h1>
+      <p class="hero-subtitle">Order delicious food directly from your table</p>
+    </div>
+  </div>
 </div>

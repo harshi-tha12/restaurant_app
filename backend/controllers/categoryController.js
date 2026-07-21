@@ -9,6 +9,7 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // GET all categories with dishes
+// GET all categories with dishes
 exports.getCategories = (req, res) => {
   const sql = `
     SELECT c.category_id, c.category_name, 
@@ -30,6 +31,7 @@ exports.getCategories = (req, res) => {
     // Transform flat results into nested structure
     const categories = [];
     const categoryMap = {};
+    const BASE_URL = `http://localhost:5000`; // ✅ Add base URL
 
     results.forEach(row => {
       if (!categoryMap[row.category_id]) {
@@ -42,12 +44,18 @@ exports.getCategories = (req, res) => {
       }
 
       if (row.dish_id) {
+        // ✅ Convert relative image path to full URL
+        let imageUrl = row.image_url;
+        if (imageUrl && !imageUrl.startsWith('http')) {
+          imageUrl = `${BASE_URL}${imageUrl}`;
+        }
+
         categoryMap[row.category_id].items.push({
           id: row.dish_id,
           name: row.dish_name,
           ingredients: row.ingredients,
           price: row.price,
-          image: row.image_url,
+          image: imageUrl, // ✅ Full URL now
           isVeg: row.is_veg,
           isAvailable: row.is_available
         });

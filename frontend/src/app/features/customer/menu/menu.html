@@ -1,0 +1,137 @@
+<div class="customer-menu-container">
+
+    <!-- Search Bar -->
+    <div class="search-section">
+        <input type="text" class="search-input" placeholder="🔍 Search dishes..." [(ngModel)]="searchQuery" />
+    </div>
+
+    <!-- Browse Categories Section -->
+    <section class="browse-categories">
+        <h2 class="section-title">Browse Categories</h2>
+
+        <div class="categories-grid">
+            <div *ngFor="let category of categories" class="category-card"
+                [class.active]="selectedCategory === category.id" (click)="selectCategory(category.id)">
+                <!-- Get first item image as category image -->
+                <div class="category-image">
+                    <img *ngIf="category.items && category.items[0]?.image" [src]="category.items[0].image"
+                        alt="{{ category.name }}" />
+                    <div *ngIf="!category.items || !category.items[0]?.image" class="no-image">
+                        🍽️
+                    </div>
+                </div>
+                <div class="category-info">
+                    <h3 class="category-name">{{ category.name }}</h3>
+                    <p class="items-count">{{ category.items?.length || 0 }} items</p>
+                </div>
+                <div class="category-overlay"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="menu-wrapper">
+        <!-- Main Content -->
+        <main class="menu-content">
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="loading">
+                <p>Loading menu...</p>
+            </div>
+
+            <!-- Selected Category Title -->
+            <div *ngIf="!isLoading && selectedCategory" class="category-title-section">
+                <h2 class="category-title">
+                    {{ getSelectedCategoryName() }}
+                </h2>
+            </div>
+
+            <!-- Items Grid -->
+            <div *ngIf="!isLoading" class="items-grid">
+                <div *ngFor="let item of getSelectedCategoryItems()" class="menu-item-card">
+                    <!-- Item Image -->
+                    <div class="item-image-wrapper">
+                        <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" class="item-image" />
+                        <div *ngIf="!item.image" class="no-image">📷</div>
+
+                        <!-- Veg/Non-Veg Badge -->
+                        <div class="veg-badge" [class.non-veg]="!item.isVeg">
+                            {{ item.isVeg ? '🌱 VEG' : '🍗 NON-VEG' }}
+                        </div>
+
+                        <!-- Availability Badge -->
+                        <div class="availability-badge" *ngIf="!item.isAvailable">
+                            Out of Stock
+                        </div>
+                    </div>
+
+                    <!-- Item Details -->
+                    <div class="item-details">
+                        <h3 class="item-name">{{ item.name }}</h3>
+
+                        <p class="item-ingredients" [title]="item.ingredients">
+                            {{ item.ingredients }}
+                        </p>
+
+                        <div class="item-footer">
+                            <span class="price">₹{{ item.price }}</span>
+
+                            <!-- Add to Cart Button -->
+                            <button class="btn-add-to-cart" (click)="addToCart(item)" [disabled]="!item.isAvailable">
+                                + Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No Items Found -->
+                <div *ngIf="getSelectedCategoryItems().length === 0" class="no-items">
+                    <p>😕 No items found</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Cart Sidebar -->
+        <aside class="cart-sidebar">
+            <div class="cart-header">
+                <h3>🛒 Your Cart</h3>
+                <span class="cart-count" *ngIf="getCartCount() > 0">{{ getCartCount() }}</span>
+            </div>
+
+            <div class="cart-items">
+                <div *ngIf="cart.length === 0" class="empty-cart">
+                    <p>Your cart is empty</p>
+                    <p class="empty-cart-hint">Add items to get started!</p>
+                </div>
+
+                <div *ngFor="let cartItem of cart" class="cart-item">
+                    <div class="cart-item-info">
+                        <h4>{{ cartItem.name }}</h4>
+                        <p class="cart-item-price">₹{{ cartItem.price }}</p>
+                    </div>
+
+                    <div class="cart-item-controls">
+                        <button (click)="updateQuantity(cartItem.id, cartItem.quantity - 1)">−</button>
+                        <span class="quantity">{{ cartItem.quantity }}</span>
+                        <button (click)="updateQuantity(cartItem.id, cartItem.quantity + 1)">+</button>
+                    </div>
+
+                    <div class="cart-item-total">
+                        ₹{{ cartItem.price * cartItem.quantity }}
+                    </div>
+
+                    <button class="btn-remove" (click)="removeFromCart(cartItem.id)">✕</button>
+                </div>
+            </div>
+
+            <!-- Cart Footer -->
+            <div *ngIf="cart.length > 0" class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span class="total-amount">₹{{ getCartTotal() }}</span>
+                </div>
+                <button class="btn-checkout" (click)="proceedToCheckout()">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </aside>
+    </div>
+</div>

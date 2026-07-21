@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { Home } from './features/customer/home/home';
 import { Login } from './features/admin/login/login';
 import { Dashboard } from './features/admin/dashboard/dashboard';
+import { CustomerMenu } from './features/customer/menu/menu';
 
 export const routes: Routes = [
 
@@ -24,6 +25,12 @@ export const routes: Routes = [
   {
   path:'admin/dashboard',
   component:Dashboard
+},
+
+// Add this route to your existing routes
+{
+  path: 'menu',
+  component: CustomerMenu
 }
 
 ];

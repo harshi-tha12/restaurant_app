@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,20 +8,50 @@ import { CommonModule } from '@angular/common';
   templateUrl: './hero-slider.html',
   styleUrl: './hero-slider.css'
 })
-export class HeroSlider {
+export class HeroSlider implements OnInit, OnDestroy {
 
   images = [
-    'assests/images/hero/hero1.jpg',
-     'assests/images/hero/hero1.jpg',
-      'assests/images/hero/hero1.jpg'
-    
+    'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=1200&h=500&fit=crop',
+    'https://images.unsplash.com/photo-1504674900769-262f8f76b91e?w=1200&h=500&fit=crop',
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=500&fit=crop'
   ];
 
   currentImage = 0;
+  private intervalId: any;
 
-  constructor() {
-    setInterval(() => {
+  ngOnInit() {
+    this.startSlider();
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  startSlider() {
+    this.intervalId = setInterval(() => {
       this.currentImage = (this.currentImage + 1) % this.images.length;
-    }, 3000);
+    }, 4000);
+  }
+
+  nextImage() {
+    this.currentImage = (this.currentImage + 1) % this.images.length;
+    this.resetInterval();
+  }
+
+  prevImage() {
+    this.currentImage = (this.currentImage - 1 + this.images.length) % this.images.length;
+    this.resetInterval();
+  }
+
+  goToImage(index: number) {
+    this.currentImage = index;
+    this.resetInterval();
+  }
+
+  resetInterval() {
+    clearInterval(this.intervalId);
+    this.startSlider();
   }
 }

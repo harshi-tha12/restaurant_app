@@ -5,11 +5,12 @@ import { Navbar } from '../../../shared/navbar/navbar';
 import { Footer } from '../../../shared/footer/footer';
 import { HeroSlider } from '../../../shared/hero-slider/hero-slider';
 import { Categories } from '../../../shared/categories/categories';
+import { CustomerMenu } from '../menu/menu';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, Categories, HeroSlider, Navbar, Footer],
+  imports: [CommonModule,HeroSlider, Navbar, Footer, CustomerMenu],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

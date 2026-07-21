@@ -1,7 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../services/category';
+import { ReloadService } from '../../../services/reload.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-categories',
@@ -10,9 +12,11 @@ import { CategoryService } from '../../../services/category';
   templateUrl: './categories.html',
   styleUrl: './categories.css'
 })
-export class Categories implements OnInit {
+export class Categories implements OnInit, OnDestroy {
 
   private categoryService = inject(CategoryService);
+  private reloadService = inject(ReloadService);
+  private subscription: Subscription | null = null;
 
   categories: any[] = [];
   showCategoryForm = false;
@@ -40,12 +44,28 @@ export class Categories implements OnInit {
   itemErrorMessage = '';
 
   ngOnInit() {
+    console.log('Categories component initialized');
     this.loadCategories();
+    
+    // Subscribe to reload trigger immediately
+    this.subscription = this.reloadService.reloadCategories$.subscribe(() => {
+      console.log('Reload triggered from Dashboard');
+      this.loadCategories();
+    });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe to prevent memory leaks
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   loadCategories() {
+    console.log('Loading categories...');
     this.categoryService.getCategories().subscribe({
       next: (res) => {
+        console.log('API Response:', res);
         this.categories = res.data || res || [];
         console.log('Categories loaded:', this.categories);
       },
