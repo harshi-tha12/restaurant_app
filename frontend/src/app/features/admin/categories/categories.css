@@ -61,12 +61,18 @@
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .alert-error {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.form-alert {
+  margin: 0 0 15px 0;
 }
 
 @keyframes slideDown {
@@ -80,10 +86,10 @@
   }
 }
 
-/* ====== CATEGORIES GRID ====== */
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+/* ====== CATEGORIES LIST (One per row) ====== */
+.categories-list {
+  display: flex;
+  flex-direction: column;
   gap: 30px;
 }
 
@@ -94,10 +100,11 @@
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   animation: fadeInUp 0.5s ease;
+  width: 100%;
 }
 
 .category-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
@@ -145,13 +152,12 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
-/* ====== ITEMS CONTAINER ====== */
+/* ====== ITEMS CONTAINER (Side by side) ====== */
 .items-container {
-  padding: 20px;
+  padding: 25px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 15px;
-  min-height: 200px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
 }
 
 /* ====== ITEM CARD ====== */
@@ -163,9 +169,10 @@
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   position: relative;
   cursor: pointer;
+  min-height: 280px;
 }
 
 .item-card:hover {
@@ -176,7 +183,7 @@
 
 .item-image {
   width: 100%;
-  height: 100px;
+  height: 140px;
   border-radius: 8px;
   overflow: hidden;
   background: #f0f0f0;
@@ -192,18 +199,21 @@
 }
 
 .no-image {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #ccc;
 }
 
 .item-details {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .item-details h3 {
-  margin: 0 0 5px 0;
-  font-size: 0.95rem;
-  font-weight: 600;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--dark);
   white-space: nowrap;
   overflow: hidden;
@@ -213,39 +223,40 @@
 .item-details .price {
   color: var(--primary);
   font-weight: 700;
-  font-size: 1.1rem;
-  margin: 5px 0;
+  font-size: 1.2rem;
+  margin: 0;
 }
 
 .item-details .ingredients {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #666;
   margin: 5px 0 0 0;
-  line-height: 1.2;
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
 .btn-delete-item {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   background: rgba(194, 24, 7, 0.8);
   color: white;
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
   opacity: 0;
+  z-index: 10;
 }
 
 .item-card:hover .btn-delete-item {
@@ -254,7 +265,7 @@
 
 .btn-delete-item:hover {
   background: var(--secondary);
-  transform: scale(1.2);
+  transform: scale(1.1);
 }
 
 /* ====== ADD ITEM BUTTON ====== */
@@ -265,12 +276,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   color: var(--primary);
   font-weight: 600;
   font-size: 1rem;
   position: relative;
   overflow: hidden;
+  min-height: 280px;
+  padding: 0;
 }
 
 .add-item-btn::before {
@@ -295,14 +308,14 @@
 }
 
 .add-item-icon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: bold;
   line-height: 1;
 }
 
 .add-item-btn p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 /* ====== MODAL STYLES ====== */
@@ -426,30 +439,28 @@
   color: #aaa;
 }
 
-/* ====== INGREDIENTS LIST ====== */
-.ingredients-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* ====== INGREDIENTS TEXTAREA ====== */
+.ingredient-help {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  font-style: italic;
 }
 
-.ingredient-input {
-  position: relative;
-  display: flex;
-  align-items: center;
+.ingredient-textarea {
+  resize: vertical;
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
 }
 
-.ingredient-input .form-control {
-  flex: 1;
-  padding-right: 40px;
-}
-
-.ingredient-badge {
-  position: absolute;
-  right: 12px;
-  color: #28a745;
-  font-weight: bold;
-  font-size: 1rem;
+.ingredient-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(194, 24, 7, 0.1);
 }
 
 .form-text {
@@ -490,7 +501,7 @@
   margin-top: 15px;
   border-radius: 8px;
   overflow: hidden;
-  max-height: 200px;
+  max-height: 250px;
 }
 
 .image-preview img {
@@ -556,13 +567,9 @@
     font-size: 1.8rem;
   }
 
-  .categories-grid {
-    grid-template-columns: 1fr;
-  }
-
   .items-container {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
   }
 
   .modal-content {
@@ -594,7 +601,16 @@
   }
 
   .items-container {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .item-card {
+    min-height: 260px;
+  }
+
+  .add-item-btn {
+    min-height: 260px;
   }
 
   .modal-footer {

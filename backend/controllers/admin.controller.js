@@ -21,11 +21,17 @@ exports.login = (req, res) => {
         console.log("Query result:", result); // Debug log
 
         if (result.length > 0) {
-
+            const admin = result[0];
             return res.json({
                 success: true,
                 message: "Login Successful",
-                admin: result[0]
+                admin: {
+                    id: admin.id,
+                    username: admin.username,
+                    full_name: admin.full_name,
+                    admin_name: admin.admin_name,
+                    restaurant_name: admin.restaurant_name
+                }
             });
 
         } else {

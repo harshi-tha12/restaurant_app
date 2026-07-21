@@ -1,22 +1,19 @@
 <div class="categories-container">
   <!-- Header -->
   <div class="header">
-    <h1>Manage Categories & Items</h1>
+    <h1>🍕 Manage Categories & Items</h1>
     <button class="btn-add-category" (click)="openCategoryForm()">
       <span class="icon">+</span> Add Category
     </button>
   </div>
 
-  <!-- Success/Error Messages -->
-  <div *ngIf="successMessage" class="alert alert-success">
-    ✅ {{ successMessage }}
-  </div>
-  <div *ngIf="errorMessage" class="alert alert-error">
-    ❌ {{ errorMessage }}
+  <!-- Success Messages (Main Page) -->
+  <div *ngIf="successMessage" class="alert alert-success" [@fadeInOut]>
+    {{ successMessage }}
   </div>
 
-  <!-- Categories Grid -->
-  <div class="categories-grid">
+  <!-- Categories List (One per row) -->
+  <div class="categories-list">
     <div *ngFor="let category of categories" class="category-card">
       <!-- Category Header -->
       <div class="category-header">
@@ -26,24 +23,24 @@
         </button>
       </div>
 
-      <!-- Items Container -->
+      <!-- Items Container (Side by Side) -->
       <div class="items-container">
         <!-- Items Grid -->
         <div *ngFor="let item of category.items" class="item-card">
+          <button class="btn-delete-item" (click)="deleteItem(category.id, item.id)" title="Delete item">
+            ✕
+          </button>
           <div class="item-image">
-            <img *ngIf="item.image" [src]="'data:image/jpeg;base64,' + item.image" alt="{{ item.name }}" />
+            <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" />
             <div *ngIf="!item.image" class="no-image">📷</div>
           </div>
           <div class="item-details">
             <h3>{{ item.name }}</h3>
             <p class="price">₹{{ item.price }}</p>
-            <p class="ingredients" *ngIf="item.ingredients">
-              <strong>Ingredients:</strong> {{ item.ingredients }}
+            <p class="ingredients" *ngIf="item.ingredients" [title]="item.ingredients">
+              {{ item.ingredients }}
             </p>
           </div>
-          <button class="btn-delete-item" (click)="deleteItem(category.id, item.id)" title="Delete item">
-            ✕
-          </button>
         </div>
 
         <!-- Add Item Button -->
@@ -64,9 +61,14 @@
       </div>
 
       <div class="modal-body">
+        <!-- Error Message in Form -->
+        <div *ngIf="categoryErrorMessage" class="alert alert-error form-alert">
+          ❌ {{ categoryErrorMessage }}
+        </div>
+
         <!-- Category Name -->
         <div class="form-group">
-          <label for="categoryName">Category Name</label>
+          <label for="categoryName">Category Name *</label>
           <input
             type="text"
             id="categoryName"
@@ -95,6 +97,11 @@
       </div>
 
       <div class="modal-body">
+        <!-- Error Message in Form -->
+        <div *ngIf="itemErrorMessage" class="alert alert-error form-alert">
+          ❌ {{ itemErrorMessage }}
+        </div>
+
         <!-- Dish Name -->
         <div class="form-group">
           <label for="dishName">Dish Name *</label>
@@ -107,22 +114,19 @@
           />
         </div>
 
-        <!-- Ingredients -->
+        <!-- Ingredients (Single Textarea) -->
         <div class="form-group">
-          <label>Ingredients (Minimum 3, Maximum 6) *</label>
-          <div class="ingredients-list">
-            <div *ngFor="let ing of itemForm.ingredients; let i = index" class="ingredient-input">
-              <input
-                type="text"
-                [(ngModel)]="itemForm.ingredients[i]"
-                [placeholder]="'Ingredient ' + (i + 1)"
-                class="form-control"
-              />
-              <span *ngIf="itemForm.ingredients[i]" class="ingredient-badge">✓</span>
-            </div>
-          </div>
+          <label for="ingredientsText">Ingredients (3-6) *</label>
+          <p class="ingredient-help">Add one ingredient per line</p>
+          <textarea
+            id="ingredientsText"
+            [(ngModel)]="itemForm.ingredientsText"
+            placeholder="Mozzarella cheese&#10;Tomato sauce&#10;Fresh basil&#10;Olive oil&#10;Salt &amp; Pepper"
+            class="form-control ingredient-textarea"
+            rows="6"
+          ></textarea>
           <small class="form-text">
-            Filled: {{ itemForm.ingredients.filter(ing => ing.trim()).length }}/6
+            Ingredients: {{ itemForm.ingredientsText.split('\n').filter(ing => ing.trim()).length }}/6
           </small>
         </div>
 

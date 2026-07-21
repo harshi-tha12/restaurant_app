@@ -19,15 +19,15 @@ export class Categories implements OnInit {
   showItemForm = false;
   selectedCategoryId: number | null = null;
 
-  // Category form data - ONLY category name, no items in form
+  // Category form data
   categoryForm = {
     name: ''
   };
 
-  // Item form data
+  // Item form data - ingredients as single textarea
   itemForm = {
     name: '',
-    ingredients: ['', '', '', '', '', ''],
+    ingredientsText: '', // Single textarea for all ingredients
     price: '',
     image: ''
   };
@@ -35,7 +35,9 @@ export class Categories implements OnInit {
   itemImagePreview = '';
   isLoading = false;
   successMessage = '';
-  errorMessage = '';
+  successMessageType = ''; // 'category' or 'item'
+  categoryErrorMessage = '';
+  itemErrorMessage = '';
 
   ngOnInit() {
     this.loadCategories();
@@ -49,7 +51,6 @@ export class Categories implements OnInit {
       },
       error: (err) => {
         console.error('Error loading categories:', err);
-        this.errorMessage = 'Failed to load categories';
       }
     });
   }
@@ -58,34 +59,38 @@ export class Categories implements OnInit {
   openCategoryForm() {
     this.showCategoryForm = true;
     this.categoryForm = { name: '' };
+    this.categoryErrorMessage = '';
   }
 
   closeCategoryForm() {
     this.showCategoryForm = false;
     this.categoryForm = { name: '' };
+    this.categoryErrorMessage = '';
   }
 
   addCategory() {
+    this.categoryErrorMessage = '';
+
     if (!this.categoryForm.name.trim()) {
-      this.errorMessage = 'Category name is required';
+      this.categoryErrorMessage = 'Category name is required';
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     this.categoryService.addCategory(this.categoryForm).subscribe({
       next: (res) => {
         if (res.success) {
-          this.successMessage = 'Category added successfully!';
           this.closeCategoryForm();
+          this.successMessageType = 'category';
+          this.successMessage = '✅ Category added successfully!';
           this.loadCategories();
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => this.successMessage = '', 2000);
         }
         this.isLoading = false;
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to add category';
+        this.categoryErrorMessage = err.error?.message || 'Failed to add category';
         this.isLoading = false;
       }
     });
@@ -97,13 +102,14 @@ export class Categories implements OnInit {
     this.categoryService.deleteCategory(categoryId).subscribe({
       next: (res) => {
         if (res.success) {
-          this.successMessage = 'Category deleted successfully!';
+          this.successMessageType = 'category';
+          this.successMessage = '✅ Category deleted successfully!';
           this.loadCategories();
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => this.successMessage = '', 2000);
         }
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to delete category';
+        this.categoryErrorMessage = err.error?.message || 'Failed to delete category';
       }
     });
   }
@@ -114,11 +120,12 @@ export class Categories implements OnInit {
     this.showItemForm = true;
     this.itemForm = {
       name: '',
-      ingredients: ['', '', '', '', '', ''],
+      ingredientsText: '', // Empty textarea
       price: '',
       image: ''
     };
     this.itemImagePreview = '';
+    this.itemErrorMessage = '';
   }
 
   closeItemForm() {
@@ -126,11 +133,12 @@ export class Categories implements OnInit {
     this.selectedCategoryId = null;
     this.itemForm = {
       name: '',
-      ingredients: ['', '', '', '', '', ''],
+      ingredientsText: '',
       price: '',
       image: ''
     };
     this.itemImagePreview = '';
+    this.itemErrorMessage = '';
   }
 
   onItemImageSelect(event: any) {
@@ -145,28 +153,44 @@ export class Categories implements OnInit {
   }
 
   addItem() {
+    this.itemErrorMessage = '';
+
     if (!this.itemForm.name.trim()) {
-      this.errorMessage = 'Dish name is required';
+      this.itemErrorMessage = 'Dish name is required';
       return;
     }
 
-    const filledIngredients = this.itemForm.ingredients.filter(ing => ing.trim());
-    if (filledIngredients.length < 3) {
-      this.errorMessage = 'Please add at least 3 ingredients';
+    // Parse ingredients from textarea
+    const ingredientsArray = this.itemForm.ingredientsText
+      .split('\n')
+      .map(ing => ing.trim())
+      .filter(ing => ing.length > 0);
+
+    if (ingredientsArray.length < 3) {
+      this.itemErrorMessage = `Please add at least 3 ingredients (you have ${ingredientsArray.length})`;
+      return;
+    }
+
+    if (ingredientsArray.length > 6) {
+      this.itemErrorMessage = `Maximum 6 ingredients allowed (you have ${ingredientsArray.length})`;
       return;
     }
 
     if (!this.itemForm.price) {
-      this.errorMessage = 'Price is required';
+      this.itemErrorMessage = 'Price is required';
+      return;
+    }
+
+    if (!this.itemImagePreview) {
+      this.itemErrorMessage = 'Please upload an image';
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
     const formData = new FormData();
     formData.append('name', this.itemForm.name);
-    formData.append('ingredients', JSON.stringify(filledIngredients));
+    formData.append('ingredients', JSON.stringify(ingredientsArray));
     formData.append('price', this.itemForm.price);
 
     const imageInput = document.querySelector('#itemImage') as HTMLInputElement;
@@ -178,15 +202,16 @@ export class Categories implements OnInit {
       this.categoryService.addItemToCategory(this.selectedCategoryId, formData).subscribe({
         next: (res) => {
           if (res.success) {
-            this.successMessage = 'Item added successfully!';
             this.closeItemForm();
+            this.successMessageType = 'item';
+            this.successMessage = '✅ Item added successfully!';
             this.loadCategories();
-            setTimeout(() => this.successMessage = '', 3000);
+            setTimeout(() => this.successMessage = '', 2000);
           }
           this.isLoading = false;
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Failed to add item';
+          this.itemErrorMessage = err.error?.message || 'Failed to add item';
           this.isLoading = false;
         }
       });
@@ -199,13 +224,14 @@ export class Categories implements OnInit {
     this.categoryService.deleteItem(categoryId, itemId).subscribe({
       next: (res) => {
         if (res.success) {
-          this.successMessage = 'Item deleted successfully!';
+          this.successMessageType = 'item';
+          this.successMessage = '✅ Item deleted successfully!';
           this.loadCategories();
-          setTimeout(() => this.successMessage = '', 3000);
+          setTimeout(() => this.successMessage = '', 2000);
         }
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to delete item';
+        this.categoryErrorMessage = err.error?.message || 'Failed to delete item';
       }
     });
   }

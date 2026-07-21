@@ -1,1 +1,95 @@
-<p>settings works!</p>
+<div class="settings-container">
+  <div class="settings-card">
+    <h2>Restaurant Settings</h2>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Settings Form -->
+    <form (ngSubmit)="saveSettings()" class="settings-form">
+      <!-- Restaurant Name -->
+      <div class="form-group">
+        <label for="restaurantName">Restaurant Name</label>
+        <input
+          type="text"
+          id="restaurantName"
+          class="form-control"
+          [(ngModel)]="settings.restaurant_name"
+          name="restaurant_name"
+          placeholder="Enter restaurant name"
+          required
+        />
+      </div>
+
+      <!-- Admin Name -->
+      <div class="form-group">
+        <label for="adminName">Admin Name</label>
+        <input
+          type="text"
+          id="adminName"
+          class="form-control"
+          [(ngModel)]="settings.admin_name"
+          name="admin_name"
+          placeholder="Enter admin name"
+          required
+        />
+      </div>
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control"
+          [(ngModel)]="settings.username"
+          name="username"
+          placeholder="Enter username"
+          required
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">New Password (optional)</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          [(ngModel)]="settings.password"
+          name="password"
+          placeholder="Leave blank to keep current password"
+        />
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group" *ngIf="settings.password">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          class="form-control"
+          [(ngModel)]="settings.confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm new password"
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading"
+      >
+        {{ loading ? 'Saving...' : 'Save Settings' }}
+      </button>
+    </form>
+  </div>
+</div>
