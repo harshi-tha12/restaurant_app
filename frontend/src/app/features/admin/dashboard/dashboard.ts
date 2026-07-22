@@ -6,24 +6,29 @@ import { Router, RouterModule } from '@angular/router';
 import { Categories } from '../categories/categories';
 import { Settings } from '../settings/settings';
 import { ReloadService } from '../../../services/reload.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, MatTabsModule, MatIconModule, Categories, Settings, RouterModule],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrl: './dashboard.css',
+
 })
 export class Dashboard implements OnInit {
 
   private router = inject(Router);
   private reloadService = inject(ReloadService);
+  private http = inject(HttpClient);
   isSidebarOpen = true;
 
   selectedPage = 'dashboard';
   adminName: string = '';
   restaurantName: string = '';
   adminId: number = 1;
+  newOrders: any[] = [];
+  pastOrders: any[] = [];
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
@@ -31,10 +36,14 @@ export class Dashboard implements OnInit {
 
   openPage(page: string) {
     this.selectedPage = page;
-    
-    // Trigger reload for categories when switching to that page
+
     if (page === 'categories') {
       setTimeout(() => this.reloadService.triggerReloadCategories(), 0);
+    }
+
+    if (page === 'orders') {
+      // load orders when admin navigates to orders
+      this.loadOrders();
     }
   }
 
@@ -60,4 +69,42 @@ export class Dashboard implements OnInit {
     localStorage.removeItem('adminId');
     this.router.navigate(['/admin/login']);
   }
+
+  loadOrders() {
+    // New orders
+    this.http.get('/api/orders?status=new').subscribe({
+      next: (res: any) => {
+        if (res && res.success) {
+          this.newOrders = res.data || [];
+        } else {
+          this.newOrders = [];
+        }
+      }, error: (err) => {
+        console.error('Failed to load new orders', err);
+        this.newOrders = [];
+      }
+    });
+
+    // Past orders
+    this.http.get('/api/orders?status=past').subscribe({
+      next: (res: any) => {
+        if (res && res.success) {
+          this.pastOrders = res.data || [];
+        } else {
+          this.pastOrders = [];
+        }
+      }, error: (err) => {
+        console.error('Failed to load past orders', err);
+        this.pastOrders = [];
+      }
+    });
+  }
+
+  markOrderCompleted(orderId: number) {
+    this.http.put(`/api/orders/${orderId}/status`, { status: 'completed' }).subscribe({
+      next: () => this.loadOrders(),
+      error: (err) => console.error('Failed to update order status', err)
+    });
+  }
 }
+

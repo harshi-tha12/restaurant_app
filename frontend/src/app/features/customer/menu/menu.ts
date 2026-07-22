@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../services/category';
-
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-customer-menu',
@@ -15,7 +16,8 @@ export class CustomerMenu implements OnInit, OnDestroy {
 
 
   private categoryService = inject(CategoryService);
-
+  private router = inject(Router);
+  private http = inject(HttpClient);
 
   categories: any[] = [];
   cart: any[] = [];
@@ -148,6 +150,41 @@ export class CustomerMenu implements OnInit, OnDestroy {
 
 
   proceedToCheckout() {
-    console.log('Proceed to checkout with cart:', this.cart);
+    if (!this.cart || this.cart.length === 0) {
+      alert('Your cart is empty. Please add items to checkout.');
+      return;
+    }
+
+    const order = {
+      order_ref: 'ORD-' + String(Date.now()).slice(-6),
+      table: localStorage.getItem('table') || 'T1',
+      items: this.cart.map(c => ({
+        id: c.id,
+        name: c.name,
+        price: c.price,
+        quantity: c.quantity
+      })),
+      total: this.getCartTotal()
+    };
+
+    // Post to backend to create order
+    this.http.post('/api/orders', order).subscribe({
+      next: (res: any) => {
+        if (res && res.success) {
+          const createdOrder = res.order || { ...order, id: res.order?.id || null };
+          // navigate to order-success, pass server order
+          this.router.navigate(['/order-success'], { state: { order: createdOrder } });
+          // optional: clear local cart after creating order
+          this.cart = [];
+        } else {
+          alert('Failed to create order. Please try again.');
+          console.error('Unexpected create order response:', res);
+        }
+      },
+      error: (err) => {
+        console.error('Error creating order:', err);
+        alert('Server error creating order. Try again later.');
+      }
+    });
   }
 }

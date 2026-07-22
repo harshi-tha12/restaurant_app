@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-success',
@@ -10,7 +11,10 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './order-success.html',
   styleUrls: ['./order-success.css'],
 })
+
+
 export class OrderSuccess implements OnInit {
+  
   order: any = {
     id: 'TEST-0001',
     table: 'T1',
@@ -72,6 +76,7 @@ export class OrderSuccess implements OnInit {
 
   // NEW — navigate back to menu (simple client-side redirect)
   goHome() {
+    
     window.location.href = '/';
   }
 }

@@ -24,6 +24,9 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/settings', settingsRoutes);
 
+const orderRoutes = require('./routes/orderRoutes');
+app.use('/api/orders', orderRoutes);
+
 app.get('/', (req, res) => {
     res.send('Restaurant Ordering API Running 🚀');
 });
