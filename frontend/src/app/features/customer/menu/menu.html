@@ -90,18 +90,14 @@
         </main>
 
         <!-- Cart Sidebar -->
-        <aside class="cart-sidebar">
+        <!-- Cart Sidebar: only render when cart has items -->
+        <aside class="cart-sidebar" *ngIf="cart.length > 0">
             <div class="cart-header">
                 <h3>🛒 Your Cart</h3>
                 <span class="cart-count" *ngIf="getCartCount() > 0">{{ getCartCount() }}</span>
             </div>
 
             <div class="cart-items">
-                <div *ngIf="cart.length === 0" class="empty-cart">
-                    <p>Your cart is empty</p>
-                    <p class="empty-cart-hint">Add items to get started!</p>
-                </div>
-
                 <div *ngFor="let cartItem of cart" class="cart-item">
                     <div class="cart-item-info">
                         <h4>{{ cartItem.name }}</h4>
@@ -123,7 +119,7 @@
             </div>
 
             <!-- Cart Footer -->
-            <div *ngIf="cart.length > 0" class="cart-footer">
+            <div class="cart-footer">
                 <div class="cart-total">
                     <span>Total:</span>
                     <span class="total-amount">₹{{ getCartTotal() }}</span>

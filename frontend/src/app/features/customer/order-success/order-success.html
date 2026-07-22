@@ -1,1 +1,78 @@
-<p>order-success works!</p>
+<!-- frontend/src/app/features/customer/order-success/order-success.html -->
+<div class="receipt-page">
+    <div class="receipt-card" *ngIf="!paid; else thanks">
+        <header class="receipt-header">
+            <div class="logo-emoji">🥳</div>
+            <div>
+                <h2 class="title">Final Bill</h2>
+                <div class="meta">Order: <strong>{{ order.id }}</strong> • Table: <strong>{{ order.table }}</strong>
+                </div>
+                <div class="meta small">Placed: {{ order.createdAt | date:'short' }}</div>
+            </div>
+        </header>
+
+        <section class="items">
+            <div *ngFor="let i of order.items" class="line">
+                <div class="left">
+                    <div class="name">{{ i.name }}</div>
+                    <div class="qty">x{{ i.quantity || 1 }}</div>
+                </div>
+                <div class="right">₹{{ (i.price * (i.quantity || 1)) | number:'1.0-2' }}</div>
+            </div>
+        </section>
+
+        <section class="summary">
+            <div class="row">
+                <span>Subtotal</span>
+                <span>₹{{ getSubtotal() | number:'1.0-2' }}</span>
+            </div>
+            <div class="row">
+                <span>Service (5%)</span>
+                <span>₹{{ getTax() | number:'1.0-2' }}</span>
+            </div>
+
+            <div class="tip-row">
+                <span>Tip</span>
+                <div class="tip-controls">
+                    <button type="button" (click)="addTip(0)">No tip</button>
+                    <button type="button" (click)="addTip(20)">₹20</button>
+                    <button type="button" (click)="addTip(50)">₹50</button>
+                    <button type="button" (click)="addTip(100)">₹100</button>
+                    <input type="number" min="0" placeholder="Custom" [(ngModel)]="tip" />
+                </div>
+            </div>
+
+            <div class="row total">
+                <strong>Total</strong>
+                <strong>₹{{ getTotal() | number:'1.0-2' }}</strong>
+            </div>
+        </section>
+
+        <section class="actions">
+            <button class="btn-pay" (click)="pay()">💳 Pay ₹{{ getTotal() }} — Tap to delight!</button>
+            <button class="btn-pay cash" (click)="addTip(0); pay()">💵 Pay at counter</button>
+        </section>
+    </div>
+
+    <ng-template #thanks>
+        <div class="thank-you">
+            <h1>🎉 Payment Successful!</h1>
+            <p class="subtitle">Order <strong>{{ order.id }}</strong> is confirmed. Our kitchen is on it!</p>
+
+            <div class="receipt-quick">
+                <div>Table: <strong>{{ order.table }}</strong></div>
+                <div>Total Paid: <strong>₹{{ getTotal() | number:'1.0-2' }}</strong></div>
+            </div>
+
+            <div class="next-actions">
+                <button class="btn-action" (click)="goHome()">Back to Menu</button>
+                <button class="btn-action" (click)="printReceipt()">Print Receipt</button>
+            </div>
+        </div>
+    </ng-template>
+
+    <!-- Confetti visual (created at runtime when showConfetti true) -->
+    <div class="confetti" *ngIf="showConfetti">
+        <span *ngFor="let c of confettiPieces" class="piece"></span>
+    </div>
+</div>
