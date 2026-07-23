@@ -244,6 +244,29 @@
             <app-settings></app-settings>
         </ng-container>
 
+        <!-- New Orders Section -->
+        <div class="orders-section">
+            <h3>New Orders</h3>
+            <div *ngIf="newOrders.length === 0" class="empty">
+                No new orders yet
+            </div>
+            <div *ngFor="let order of newOrders" class="order-card">
+                <div class="order-header">
+                    <strong>Order #{{ order.order_ref }}</strong>
+                    <span class="status">{{ order.status }}</span>
+                </div>
+                <div class="order-items">
+                    <div *ngFor="let item of order.items">
+                        {{ item.name }} x{{ item.quantity }} - ₹{{ item.price }}
+                    </div>
+                </div>
+                <div class="order-total">Total: ₹{{ order.total }}</div>
+                <button (click)="markOrderCompleted(order.id)" class="btn-complete">
+                    Mark Completed
+                </button>
+            </div>
+        </div>
+
     </main>
 
 </div>

@@ -7,6 +7,7 @@ import { Categories } from '../categories/categories';
 import { Settings } from '../settings/settings';
 import { ReloadService } from '../../../services/reload.service';
 import { HttpClient } from '@angular/common/http';
+import { Orders } from '../../../services/order';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,15 +15,15 @@ import { HttpClient } from '@angular/common/http';
   imports: [CommonModule, MatTabsModule, MatIconModule, Categories, Settings, RouterModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
-
 })
 export class Dashboard implements OnInit {
 
   private router = inject(Router);
   private reloadService = inject(ReloadService);
   private http = inject(HttpClient);
+  private orderService = inject(Orders);
+  
   isSidebarOpen = true;
-
   selectedPage = 'dashboard';
   adminName: string = '';
   restaurantName: string = '';
@@ -72,28 +73,31 @@ export class Dashboard implements OnInit {
 
   loadOrders() {
     // New orders
-    this.http.get('/api/orders?status=new').subscribe({
+    this.orderService.getOrders('new').subscribe({
       next: (res: any) => {
         if (res && res.success) {
           this.newOrders = res.data || [];
+          console.log('New Orders loaded:', this.newOrders);
         } else {
           this.newOrders = [];
         }
-      }, error: (err) => {
+      },
+      error: (err) => {
         console.error('Failed to load new orders', err);
         this.newOrders = [];
       }
     });
 
     // Past orders
-    this.http.get('/api/orders?status=past').subscribe({
+    this.orderService.getOrders('past').subscribe({
       next: (res: any) => {
         if (res && res.success) {
           this.pastOrders = res.data || [];
         } else {
           this.pastOrders = [];
         }
-      }, error: (err) => {
+      },
+      error: (err) => {
         console.error('Failed to load past orders', err);
         this.pastOrders = [];
       }
@@ -101,10 +105,12 @@ export class Dashboard implements OnInit {
   }
 
   markOrderCompleted(orderId: number) {
-    this.http.put(`/api/orders/${orderId}/status`, { status: 'completed' }).subscribe({
-      next: () => this.loadOrders(),
+    this.orderService.updateOrderStatus(orderId, 'completed').subscribe({
+      next: () => {
+        console.log('Order marked completed');
+        this.loadOrders();
+      },
       error: (err) => console.error('Failed to update order status', err)
     });
   }
 }
-

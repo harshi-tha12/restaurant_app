@@ -26,16 +26,15 @@
   align-items: center;
   justify-content: space-between;
   height: 80px;
-  gap: 40px;
+  gap: 280px;
 }
 
-/* ====== LOGO SECTION ====== */
+/* ====== LOGO SECTION (LEFT) ====== */
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 5px;
   flex-shrink: 0;
-  min-width: 250px;
 }
 
 .logo-icon {
@@ -43,12 +42,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+}
+
+.logo-icon i {
+  font-size: 2.5rem;
 }
 
 .logo-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .brand {
@@ -57,6 +61,7 @@
   font-weight: 700;
   color: white;
   letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .restaurant-name {
@@ -70,11 +75,11 @@
   text-overflow: ellipsis;
 }
 
-/* ====== NAVIGATION LINKS ====== */
+/* ====== NAVIGATION LINKS (CENTER) ====== */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 100px;
   flex: 1;
   justify-content: center;
 }
@@ -82,7 +87,7 @@
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   color: white;
   text-decoration: none;
   font-size: 1rem;
@@ -99,66 +104,16 @@
   transform: translateY(-2px);
 }
 
-.nav-link .icon {
+.nav-link i {
   font-size: 1.3rem;
-  display: flex;
-  align-items: center;
 }
 
-/* ====== RIGHT SIDE (CART & ADMIN) ====== */
+/* ====== RIGHT SIDE (ADMIN) - RIGHT END ====== */
 .right-side {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 80px;
   flex-shrink: 0;
-}
-
-.cart-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: 2px solid white;
-  background: transparent;
-  color: white;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.cart-btn:hover {
-  background: white;
-  color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.cart-icon {
-  font-size: 1.3rem;
-}
-
-.cart-text {
-  display: inline;
-}
-
-.cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #FFD700;
-  color: var(--primary);
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  border: 2px solid white;
 }
 
 .admin-btn {
@@ -174,6 +129,7 @@
   align-items: center;
   transition: all 0.3s ease;
   font-size: 1.5rem;
+  padding: 0;
 }
 
 .admin-btn:hover {
@@ -183,10 +139,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.admin-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.admin-btn i {
+  font-size: 1.5rem;
 }
 
 /* ====== RESPONSIVE ====== */
@@ -197,7 +151,7 @@
   }
 
   .logo-section {
-    min-width: 200px;
+    flex-shrink: 0;
   }
 
   .nav-links {
@@ -207,11 +161,6 @@
   .nav-link {
     font-size: 0.95rem;
     padding: 6px 12px;
-  }
-
-  .cart-btn {
-    padding: 10px 20px;
-    font-size: 0.95rem;
   }
 }
 
@@ -223,11 +172,14 @@
   }
 
   .logo-section {
-    min-width: auto;
     gap: 10px;
   }
 
   .logo-icon {
+    font-size: 2rem;
+  }
+
+  .logo-icon i {
     font-size: 2rem;
   }
 
@@ -242,7 +194,7 @@
 
   .nav-links {
     gap: 15px;
-    flex: 0.5;
+    flex: 1;
   }
 
   .nav-link {
@@ -250,21 +202,17 @@
     padding: 6px 10px;
   }
 
-  .nav-link .icon {
+  .nav-link i {
     font-size: 1.1rem;
-  }
-
-  .cart-text {
-    display: none;
-  }
-
-  .cart-btn {
-    padding: 10px 15px;
   }
 
   .admin-btn {
     width: 44px;
     height: 44px;
+  }
+
+  .admin-btn i {
+    font-size: 1.3rem;
   }
 }
 
@@ -283,6 +231,10 @@
     font-size: 1.8rem;
   }
 
+  .logo-icon i {
+    font-size: 1.8rem;
+  }
+
   .brand {
     font-size: 1.2rem;
   }
@@ -293,7 +245,8 @@
 
   .nav-links {
     gap: 8px;
-    justify-content: flex-start;
+    justify-content: center;
+    flex: 1;
   }
 
   .nav-link {
@@ -301,7 +254,7 @@
     padding: 4px 8px;
   }
 
-  .nav-link .icon {
+  .nav-link i {
     font-size: 1rem;
   }
 
@@ -309,14 +262,13 @@
     gap: 10px;
   }
 
-  .cart-btn {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-  }
-
   .admin-btn {
     width: 40px;
     height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .admin-btn i {
     font-size: 1.2rem;
   }
 }

@@ -1,40 +1,31 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <!-- Logo and Restaurant Name -->
+    <!-- Logo and Restaurant Name (Left) -->
     <div class="logo-section">
-      <div class="logo-icon">🍽️</div>
+      <div class="logo-icon">
+        <i class="fas fa-utensils"></i>
+      </div>
       <div class="logo-text">
-        <h1 class="brand">FoodieQR</h1>
-        <p class="restaurant-name">{{ restaurantName }}</p>
+        <h1 class="brand">{{ restaurantName }}</h1>
       </div>
     </div>
 
-    <!-- Navigation Links -->
+    <!-- Navigation Links (Center) -->
     <div class="nav-links">
       <a routerLink="/" class="nav-link">
-        <span class="icon">🏠</span>
+        <i class="fas fa-home"></i>
         Home
       </a>
       <a (click)="scrollToMenu()" class="nav-link">
-        <span class="icon">📋</span>
+        <i class="fas fa-book-open"></i>
         Menu
-      </a>
-      <a href="#" class="nav-link">
-        <span class="icon">📞</span>
-        Contact
       </a>
     </div>
 
-    <!-- Right Side (Cart & Admin) -->
+    <!-- Admin Icon (Right) -->
     <div class="right-side">
-      <button class="cart-btn">
-        <span class="cart-icon">🛒</span>
-        <span class="cart-text">Cart</span>
-        <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
-      </button>
-
       <button class="admin-btn" routerLink="/admin/login" title="Admin Login">
-        <span class="admin-icon">⚙️</span>
+        <i class="fas fa-user-shield"></i>
       </button>
     </div>
   </div>

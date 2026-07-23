@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../../services/category';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Orders } from '../../../services/order';
 
 @Component({
   selector: 'app-customer-menu',
@@ -14,10 +15,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CustomerMenu implements OnInit, OnDestroy {
 
-
   private categoryService = inject(CategoryService);
   private router = inject(Router);
   private http = inject(HttpClient);
+  private orderService = inject(Orders);
 
   categories: any[] = [];
   cart: any[] = [];
@@ -25,22 +26,18 @@ export class CustomerMenu implements OnInit, OnDestroy {
   isLoading = true;
   searchQuery = '';
 
-
   ngOnInit() {
     console.log('CustomerMenu initialized');
     this.loadCategories();
   }
 
-
   ngOnDestroy() {
     // Cleanup if needed
   }
 
-
   loadCategories() {
     console.log('Starting to load categories...');
     this.isLoading = true;
-
 
     this.categoryService.getCategories().subscribe({
       next: (res) => {
@@ -56,16 +53,13 @@ export class CustomerMenu implements OnInit, OnDestroy {
           this.categories = [];
         }
 
-
         console.log('✅ Categories set to:', this.categories);
-
 
         // Select first category by default
         if (this.categories.length > 0) {
           this.selectedCategory = this.categories[0].id;
           console.log('✅ Selected category:', this.selectedCategory);
         }
-
 
         this.isLoading = false;
         console.log('✅ Loading finished');
@@ -80,7 +74,6 @@ export class CustomerMenu implements OnInit, OnDestroy {
       }
     });
   }
-
 
   selectCategory(categoryId: number) {
     console.log('Category selected:', categoryId);
@@ -103,12 +96,10 @@ export class CustomerMenu implements OnInit, OnDestroy {
       return category.items || [];
     }
 
-
     return (category.items || []).filter((item: any) =>
       item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
-
 
   addToCart(item: any) {
     const cartItem = this.cart.find(c => c.id === item.id);
@@ -125,11 +116,9 @@ export class CustomerMenu implements OnInit, OnDestroy {
     console.log('Cart updated:', this.cart);
   }
 
-
   removeFromCart(itemId: number) {
     this.cart = this.cart.filter(item => item.id !== itemId);
   }
-
 
   updateQuantity(itemId: number, quantity: number) {
     const item = this.cart.find(c => c.id === itemId);
@@ -138,16 +127,13 @@ export class CustomerMenu implements OnInit, OnDestroy {
     }
   }
 
-
   getCartTotal() {
     return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
-
   getCartCount() {
     return this.cart.reduce((count, item) => count + item.quantity, 0);
   }
-
 
   proceedToCheckout() {
     if (!this.cart || this.cart.length === 0) {
@@ -168,7 +154,7 @@ export class CustomerMenu implements OnInit, OnDestroy {
     };
 
     // Post to backend to create order
-    this.http.post('/api/orders', order).subscribe({
+    this.orderService.createOrder(order).subscribe({
       next: (res: any) => {
         if (res && res.success) {
           const createdOrder = res.order || { ...order, id: res.order?.id || null };

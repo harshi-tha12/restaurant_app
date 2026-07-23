@@ -10,25 +10,24 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
-  restaurantName: string = 'FoodieQR';
-  cartCount: number = 0;
+  restaurantName: string = 'Restaurant';
 
-  ngOnInit() {
-    // Try to get restaurant name from localStorage or use default
-    const adminData = localStorage.getItem('restaurantData');
-    if (adminData) {
-      try {
-        const data = JSON.parse(adminData);
-        this.restaurantName = data.restaurant_name || 'FoodieQR';
-      } catch (e) {
-        console.log('Error parsing restaurant data');
-      }
+  // frontend/src/app/shared/navbar/navbar.ts
+ngOnInit() {
+  const adminData = localStorage.getItem('admin');
+  console.log('Raw admin data from localStorage:', adminData);
+  
+  if (adminData) {
+    try {
+      const admin = JSON.parse(adminData);
+      console.log('Parsed admin object:', admin);
+      this.restaurantName = admin.restaurant_name || 'Restaurant';
+      console.log('Restaurant name set to:', this.restaurantName);
+    } catch (e) {
+      console.error('Error parsing admin data:', e);
     }
-
-    // You can update cart count from a service later
-    // For now, it's just a placeholder
   }
-
+}
   scrollToMenu() {
     const menuElement = document.querySelector('app-customer-menu');
     if (menuElement) {
