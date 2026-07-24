@@ -30,6 +30,11 @@ export class Dashboard implements OnInit {
   adminId: number = 1;
   newOrders: any[] = [];
   pastOrders: any[] = [];
+  
+  // Statistics
+  totalOrders: number = 0;
+  totalRevenue: number = 0;
+  completedOrders: number = 0;
 
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
@@ -43,7 +48,6 @@ export class Dashboard implements OnInit {
     }
 
     if (page === 'orders') {
-      // load orders when admin navigates to orders
       this.loadOrders();
     }
   }
@@ -62,6 +66,31 @@ export class Dashboard implements OnInit {
         console.log('Error parsing admin data');
       }
     }
+
+    // Load statistics on init
+    this.loadStatistics();
+  }
+
+  loadStatistics() {
+    console.log('📊 Loading statistics...');
+    
+    this.http.get<any>('http://localhost:5000/api/orders/statistics').subscribe({
+      next: (res) => {
+        console.log('✅ Statistics loaded:', res);
+        
+        if (res.success) {
+          this.totalOrders = res.data.totalOrders || 0;
+          this.totalRevenue = res.data.totalRevenue || 0;
+          this.completedOrders = res.data.completedOrders || 0;
+          console.log('Total Orders:', this.totalOrders);
+          console.log('Total Revenue:', this.totalRevenue);
+          console.log('Completed Orders:', this.completedOrders);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Failed to load statistics:', err);
+      }
+    });
   }
 
   logout() {
@@ -109,6 +138,7 @@ export class Dashboard implements OnInit {
       next: () => {
         console.log('Order marked completed');
         this.loadOrders();
+        this.loadStatistics(); // Refresh statistics
       },
       error: (err) => console.error('Failed to update order status', err)
     });

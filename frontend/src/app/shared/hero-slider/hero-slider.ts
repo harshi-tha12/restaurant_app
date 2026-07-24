@@ -12,7 +12,7 @@ export class HeroSlider implements OnInit, OnDestroy {
 
   images = [
     'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=1200&h=500&fit=crop',
-    'https://images.unsplash.com/photo-1504674900769-262f8f76b91e?w=1200&h=500&fit=crop',
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&h=500&fit=crop',
     'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&h=500&fit=crop'
   ];
 

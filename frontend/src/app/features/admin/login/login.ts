@@ -16,7 +16,6 @@ export class Login {
 
   username = '';
   password = '';
-  isLoading = false;
 
   private auth = inject(AdminAuthService);
   private router = inject(Router);
@@ -27,22 +26,21 @@ export class Login {
       return;
     }
 
-    this.isLoading = true;
-
     this.auth.login({
       username: this.username,
       password: this.password
     }).subscribe({
       next: (res: any) => {
-        this.isLoading = false;
+        console.log('Login response:', res);
         
-        if (res.success) {
-          // Save complete admin data to localStorage
+        if (res.success && res.admin) {
+          // ✅ SAVE ADMIN DATA TO LOCALSTORAGE
           localStorage.setItem('admin', JSON.stringify(res.admin));
           localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('adminId', res.admin.id?.toString());
           
-          console.log('Admin logged in:', res.admin);
-          alert(res.message || 'Login successful');
+          console.log('Admin data saved:', res.admin);
+          alert(res.message);
           
           // Navigate to dashboard
           this.router.navigate(['/admin/dashboard']);
@@ -51,9 +49,8 @@ export class Login {
         }
       },
       error: (err) => {
-        this.isLoading = false;
         console.error('Login error:', err);
-        alert(err.error?.message || 'Login failed. Please try again.');
+        alert(err.error?.message || 'Login failed');
       }
     });
   }

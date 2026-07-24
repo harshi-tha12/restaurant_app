@@ -25,59 +25,79 @@ export class CustomerMenu implements OnInit, OnDestroy {
   selectedCategory: number | null = null;
   isLoading = true;
   searchQuery = '';
+  
+  // Carousel
+  carouselIndex = 0;
+  visibleCount = 5;
 
   ngOnInit() {
-    console.log('CustomerMenu initialized');
+    console.log('🎬 CustomerMenu initialized');
     this.loadCategories();
+    this.updateVisibleCount();
+    window.addEventListener('resize', () => this.updateVisibleCount());
   }
 
   ngOnDestroy() {
-    // Cleanup if needed
+    window.removeEventListener('resize', () => this.updateVisibleCount());
+  }
+
+  updateVisibleCount() {
+    const width = window.innerWidth;
+    if (width < 640) this.visibleCount = 2;
+    else if (width < 1024) this.visibleCount = 3;
+    else if (width < 1400) this.visibleCount = 4;
+    else this.visibleCount = 5;
   }
 
   loadCategories() {
-    console.log('Starting to load categories...');
-    this.isLoading = true;
+  console.log('📥 Starting to load categories...');
+  this.isLoading = true;
 
-    this.categoryService.getCategories().subscribe({
-      next: (res) => {
-        console.log('✅ Categories API Response:', res);
+  this.categoryService.getCategories().subscribe({
+    next: (res: any) => {
+      console.log('✅ Categories API Response:', res);
 
-        // Handle different response formats
-        if (res.data && Array.isArray(res.data)) {
-          this.categories = res.data;
-        } else if (Array.isArray(res)) {
-          this.categories = res;
-        } else {
-          console.warn('Unexpected response format:', res);
-          this.categories = [];
-        }
+      this.categories =
+        Array.isArray(res) ? res :
+        Array.isArray(res?.data) ? res.data :
+        Array.isArray(res?.categories) ? res.categories :
+        [];
 
-        console.log('✅ Categories set to:', this.categories);
+      console.log('✅ Categories loaded:', this.categories.length);
 
-        // Select first category by default
-        if (this.categories.length > 0) {
-          this.selectedCategory = this.categories[0].id;
-          console.log('✅ Selected category:', this.selectedCategory);
-        }
-
-        this.isLoading = false;
-        console.log('✅ Loading finished');
-      },
-      error: (err) => {
-        console.error('❌ Error loading categories:', err);
-        this.isLoading = false;
-        this.categories = [];
-      },
-      complete: () => {
-        console.log('✅ Observable completed');
-      }
-    });
+      this.selectedCategory = this.categories.length > 0 ? this.categories[0].id : null;
+      this.carouselIndex = 0;
+      this.updateVisibleCount();
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('❌ Error loading categories:', err);
+      this.categories = [];
+      this.selectedCategory = null;
+      this.isLoading = false;
+    }
+  });
+}
+  selectCategory(categoryId: number) {
+    this.selectedCategory = categoryId;
   }
 
-  selectCategory(categoryId: number) {
-    console.log('Category selected:', categoryId);
-    this.selectedCategory = categoryId;
+  previousCategories() {
+    if (this.carouselIndex > 0) this.carouselIndex--;
+  }
+
+  nextCategories() {
+    const maxIndex = Math.max(0, this.categories.length - this.visibleCount);
+    if (this.carouselIndex < maxIndex) this.carouselIndex++;
+  }
+
+  canScrollLeft() {
+    return this.carouselIndex > 0;
+  }
+
+  canScrollRight() {
+    const maxIndex = Math.max(0, this.categories.length - this.visibleCount);
+    return this.carouselIndex < maxIndex;
   }
 
   getSelectedCategory() {
@@ -103,17 +123,11 @@ export class CustomerMenu implements OnInit, OnDestroy {
 
   addToCart(item: any) {
     const cartItem = this.cart.find(c => c.id === item.id);
-
     if (cartItem) {
       cartItem.quantity += 1;
     } else {
-      this.cart.push({
-        ...item,
-        quantity: 1
-      });
+      this.cart.push({ ...item, quantity: 1 });
     }
-
-    console.log('Cart updated:', this.cart);
   }
 
   removeFromCart(itemId: number) {
@@ -153,18 +167,14 @@ export class CustomerMenu implements OnInit, OnDestroy {
       total: this.getCartTotal()
     };
 
-    // Post to backend to create order
     this.orderService.createOrder(order).subscribe({
       next: (res: any) => {
         if (res && res.success) {
           const createdOrder = res.order || { ...order, id: res.order?.id || null };
-          // navigate to order-success, pass server order
           this.router.navigate(['/order-success'], { state: { order: createdOrder } });
-          // optional: clear local cart after creating order
           this.cart = [];
         } else {
           alert('Failed to create order. Please try again.');
-          console.error('Unexpected create order response:', res);
         }
       },
       error: (err) => {
