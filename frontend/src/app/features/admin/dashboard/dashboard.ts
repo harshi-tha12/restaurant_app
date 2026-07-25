@@ -30,6 +30,7 @@ export class Dashboard implements OnInit {
   adminId: number = 1;
   newOrders: any[] = [];
   pastOrders: any[] = [];
+  showLogoutConfirm = false;
   
   // Statistics
   totalOrders: number = 0;
@@ -58,7 +59,7 @@ export class Dashboard implements OnInit {
     if (adminData) {
       try {
         const admin = JSON.parse(adminData);
-        this.adminName = admin.admin_name || admin.full_name || 'Admin';
+        this.adminName = admin.admin_name || 'Admin';
         this.restaurantName = admin.restaurant_name || 'Restaurant';
         this.adminId = admin.id || 1;
         localStorage.setItem('adminId', this.adminId.toString());
@@ -69,6 +70,7 @@ export class Dashboard implements OnInit {
 
     // Load statistics on init
     this.loadStatistics();
+    this.loadNewOrders();
   }
 
   loadStatistics() {
@@ -94,10 +96,37 @@ export class Dashboard implements OnInit {
   }
 
   logout() {
+    // ✅ Show confirmation dialog
+    this.showLogoutConfirm = true;
+  }
+
+  confirmLogout() {
     localStorage.removeItem('admin');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('adminId');
-    this.router.navigate(['/admin/login']);
+    this.showLogoutConfirm = false;
+    this.router.navigate(['']);
+  }
+
+  cancelLogout() {
+    this.showLogoutConfirm = false;
+  }
+
+  loadNewOrders() {
+    this.orderService.getOrders('new').subscribe({
+      next: (res: any) => {
+        if (res && res.success) {
+          this.newOrders = res.data || [];
+          console.log('New Orders loaded:', this.newOrders);
+        } else {
+          this.newOrders = [];
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load new orders', err);
+        this.newOrders = [];
+      }
+    });
   }
 
   loadOrders() {
@@ -138,7 +167,7 @@ export class Dashboard implements OnInit {
       next: () => {
         console.log('Order marked completed');
         this.loadOrders();
-        this.loadStatistics(); // Refresh statistics
+        this.loadStatistics();
       },
       error: (err) => console.error('Failed to update order status', err)
     });

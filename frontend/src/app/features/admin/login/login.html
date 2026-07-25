@@ -1,23 +1,48 @@
 <div class="login-page">
 
     <div class="login-card">
+        <h2>🍽️ FoodieQR Admin Login</h2>
 
-        <h2>Admin Login</h2>
+        <!-- Error Message Inside Card -->
+        <div *ngIf="errorMessage" class="error-box">
+            {{ errorMessage }}
+        </div>
 
-        <input
-            type="text"
-            [(ngModel)]="username"
-            placeholder="Username">
+        <div class="form-group">
+            <label>Username</label>
+            <input 
+                type="text" 
+                [(ngModel)]="username" 
+                placeholder="Enter your username" 
+                class="input-field"
+                [disabled]="isLoading || isLoginSuccess">
+        </div>
 
-        <input
-            type="password"
-            [(ngModel)]="password"
-            placeholder="Password">
+        <div class="form-group">
+            <label>Password</label>
+            <input 
+                type="password" 
+                [(ngModel)]="password" 
+                placeholder="Enter your password" 
+                class="input-field"
+                [disabled]="isLoading || isLoginSuccess">
+        </div>
 
-        <button (click)="login()">
-
-            Login
-
+        <button 
+            (click)="login()" 
+            class="login-btn" 
+            [disabled]="isLoading || isLoginSuccess"
+            [ngClass]="{ 'success': isLoginSuccess }">
+            
+            <span *ngIf="isLoginSuccess" class="success-text">
+                ✅ Login Successful!
+            </span>
+            <span *ngIf="!isLoginSuccess && isLoading">
+                ⏳ Logging in...
+            </span>
+            <span *ngIf="!isLoginSuccess && !isLoading">
+                Login
+            </span>
         </button>
 
     </div>

@@ -43,16 +43,6 @@
 
             </li>
 
-            <li [class.active]="selectedPage === 'menu'" (click)="openPage('menu')">
-
-                <mat-icon>restaurant_menu</mat-icon>
-
-                <span *ngIf="isSidebarOpen">
-                    Menu
-                </span>
-
-            </li>
-
             <li [class.active]="selectedPage === 'categories'" (click)="openPage('categories')">
 
                 <mat-icon>category</mat-icon>
@@ -92,51 +82,51 @@
     <main class="content">
 
         <!-- DASHBOARD -->
-
         <div *ngIf="selectedPage=='dashboard'">
-
             <h1>Dashboard</h1>
 
             <div class="cards">
-
                 <div class="card">
-
                     <h3>Today's Orders</h3>
-
-                    <h1>15</h1>
-
+                    <h1>{{ totalOrders }}</h1>
                 </div>
 
                 <div class="card">
-
                     <h3>Revenue</h3>
-
-                    <h1>₹6,500</h1>
-
+                    <h1>₹{{ totalRevenue }}</h1>
                 </div>
 
                 <div class="card">
-
-                    <h3>Pending</h3>
-
-                    <h1>5</h1>
-
-                </div>
-
-                <div class="card">
-
                     <h3>Completed</h3>
-
-                    <h1>10</h1>
-
+                    <h1>{{ completedOrders }}</h1>
                 </div>
-
             </div>
 
+            <!-- New Orders Section -->
+            <div class="orders-section">
+                <h2>New Orders</h2>
+                <div *ngIf="newOrders.length === 0" class="empty">
+                    No new orders yet
+                </div>
+                <div *ngFor="let order of newOrders" class="order-card">
+                    <div class="order-header">
+                        <strong>Order #{{ order.order_ref }}</strong>
+                        <span class="status">{{ order.status }}</span>
+                    </div>
+                    <div class="order-items">
+                        <div *ngFor="let item of order.items">
+                            {{ item.name }} x{{ item.quantity }} - ₹{{ item.price }}
+                        </div>
+                    </div>
+                    <div class="order-total">Total: ₹{{ order.total }}</div>
+                    <button (click)="markOrderCompleted(order.id)" class="btn-complete">
+                        Mark Completed
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- ORDERS -->
-
         <div *ngIf="selectedPage=='orders'">
             <h1>Orders</h1>
 
@@ -184,89 +174,25 @@
 
             </mat-tab-group>
         </div>
-        <!-- MENU -->
-
-        <div *ngIf="selectedPage=='menu'">
-
-            <div class="page-header">
-
-                <h1>Existing Menu</h1>
-
-                <button>Add Item</button>
-
-            </div>
-
-            <table>
-
-                <tr>
-
-                    <th>Image</th>
-
-                    <th>Food</th>
-
-                    <th>Category</th>
-
-                    <th>Price</th>
-
-                    <th>Edit</th>
-
-                    <th>Delete</th>
-
-                </tr>
-
-                <tr>
-
-                    <td>🍕</td>
-
-                    <td>Cheese Pizza</td>
-
-                    <td>Pizza</td>
-
-                    <td>₹250</td>
-
-                    <td><button>Edit</button></td>
-
-                    <td><button>Delete</button></td>
-
-                </tr>
-
-            </table>
-
-        </div>
 
         <!-- CATEGORIES -->
-
         <app-categories *ngIf="selectedPage=='categories'"></app-categories>
 
         <!-- SETTINGS -->
-
         <ng-container *ngIf="selectedPage=='settings'">
             <app-settings></app-settings>
         </ng-container>
 
-        <!-- New Orders Section -->
-        <div class="orders-section">
-            <h3>New Orders</h3>
-            <div *ngIf="newOrders.length === 0" class="empty">
-                No new orders yet
-            </div>
-            <div *ngFor="let order of newOrders" class="order-card">
-                <div class="order-header">
-                    <strong>Order #{{ order.order_ref }}</strong>
-                    <span class="status">{{ order.status }}</span>
-                </div>
-                <div class="order-items">
-                    <div *ngFor="let item of order.items">
-                        {{ item.name }} x{{ item.quantity }} - ₹{{ item.price }}
-                    </div>
-                </div>
-                <div class="order-total">Total: ₹{{ order.total }}</div>
-                <button (click)="markOrderCompleted(order.id)" class="btn-complete">
-                    Mark Completed
-                </button>
+    </main>
+    <!-- Logout Confirmation Dialog -->
+    <div *ngIf="showLogoutConfirm" class="logout-dialog-overlay">
+        <div class="logout-dialog-box">
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to logout?</p>
+            <div class="dialog-actions">
+                <button (click)="confirmLogout()" class="btn-confirm">Yes, Logout</button>
+                <button (click)="cancelLogout()" class="btn-cancel">Cancel</button>
             </div>
         </div>
-
-    </main>
-
+    </div>
 </div>

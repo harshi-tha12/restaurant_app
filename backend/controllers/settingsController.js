@@ -4,7 +4,7 @@ const db = require('../config/db');
 exports.getSettings = (req, res) => {
   const { adminId } = req.params;
 
-  const sql = 'SELECT id, username, full_name, restaurant_name, admin_name FROM admins WHERE id = ?';
+  const sql = 'SELECT id, username, restaurant_name, admin_name FROM admins WHERE id = ?';
 
   db.query(sql, [adminId], (err, results) => {
     if (err) {

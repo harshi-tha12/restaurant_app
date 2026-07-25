@@ -28,9 +28,8 @@ exports.login = (req, res) => {
                 admin: {
                     id: admin.id,
                     username: admin.username,
-                    full_name: admin.full_name,
                     admin_name: admin.admin_name,
-                    restaurant_name: admin.restaurant_name  // ✅ Include this
+                    restaurant_name: admin.restaurant_name
                 }
             });
 

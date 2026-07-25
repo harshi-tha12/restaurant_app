@@ -132,3 +132,36 @@ exports.updateOrderStatus = (req, res) => {
     return res.status(500).json({ success: false, message: 'Unexpected server error' });
   }
 };
+
+// NEW: Get statistics (total orders, revenue, completed)
+exports.getStatistics = (req, res) => {
+  try {
+    const sql = `
+      SELECT 
+        COUNT(*) AS totalOrders,
+        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completedOrders,
+        SUM(CASE WHEN status = 'completed' THEN total ELSE 0 END) AS totalRevenue
+      FROM orders
+    `;
+
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('Error fetching statistics:', err && (err.sqlMessage || err.message || err));
+        return res.status(500).json({ success: false, message: 'Failed to fetch statistics' });
+      }
+
+      const stats = results[0];
+      return res.json({
+        success: true,
+        data: {
+          totalOrders: stats.totalOrders || 0,
+          completedOrders: stats.completedOrders || 0,
+          totalRevenue: stats.totalRevenue || 0
+        }
+      });
+    });
+  } catch (ex) {
+    console.error('Unexpected server error fetching statistics', ex && (ex.message || ex));
+    return res.status(500).json({ success: false, message: 'Unexpected server error' });
+  }
+};
