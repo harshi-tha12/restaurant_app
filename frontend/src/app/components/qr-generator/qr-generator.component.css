@@ -1,0 +1,94 @@
+.qr-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    max-width: 500px;
+}
+
+.qr-container h2 {
+    text-align: center;
+    color: #B71C1C;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+.qr-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.qr-display {
+    text-align: center;
+}
+
+.qr-image {
+    border: 3px solid #B71C1C;
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+    max-width: 300px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.qr-text {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+.qr-info {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.qr-info p {
+    color: #333;
+    font-size: 13px;
+    margin: 0;
+    word-break: break-all;
+}
+
+.qr-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-download {
+    background: #B71C1C;
+    color: white;
+}
+
+.btn-download:hover {
+    background: #7d1414;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(183, 28, 28, 0.4);
+}
+
+.btn-print {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn-print:hover {
+    background: #bdbdbd;
+}

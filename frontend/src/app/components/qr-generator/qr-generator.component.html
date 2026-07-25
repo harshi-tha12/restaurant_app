@@ -1,0 +1,24 @@
+<div class="qr-container">
+    <h2>🔗 Generate Restaurant QR Code</h2>
+    
+    <div class="qr-content">
+        <div *ngIf="qrCodeUrl" class="qr-display">
+            <img [src]="qrCodeUrl" alt="Restaurant QR Code" class="qr-image">
+            <p class="qr-text">Scan this QR code to access your restaurant menu</p>
+        </div>
+        
+        <div class="qr-info">
+            <p><strong>URL:</strong> {{ restaurantUrl }}</p>
+            <p><strong>IP Address:</strong> {{ ipAddress }}</p>
+        </div>
+    </div>
+
+    <div class="qr-actions">
+        <button (click)="downloadQR()" class="btn btn-download">
+            ⬇️ Download QR Code
+        </button>
+        <button (click)="printQR()" class="btn btn-print">
+            🖨️ Print QR Code
+        </button>
+    </div>
+</div>

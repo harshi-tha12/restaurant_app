@@ -8,11 +8,12 @@ import { Settings } from '../settings/settings';
 import { ReloadService } from '../../../services/reload.service';
 import { HttpClient } from '@angular/common/http';
 import { Orders } from '../../../services/order';
+import { QrGeneratorComponent } from '../../../components/qr-generator/qr-generator.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatTabsModule, MatIconModule, Categories, Settings, RouterModule],
+  imports: [CommonModule, MatTabsModule, MatIconModule, Categories, Settings, RouterModule, QrGeneratorComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
