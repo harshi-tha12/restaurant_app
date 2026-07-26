@@ -29,3 +29,178 @@ body{
     width:90%;
     margin:auto;
 }
+/* Mobile Responsiveness */
+
+@media (max-width: 768px) {
+  /* Sidebar - hide on mobile */
+  .sidebar {
+    position: fixed;
+    left: -250px;
+    transition: 0.3s;
+    z-index: 999;
+  }
+
+  .sidebar.close {
+    left: -95px;
+  }
+
+  .sidebar {
+    left: 0 !important;
+  }
+
+  /* Content takes full width */
+  .content {
+    width: 100%;
+    padding: 15px;
+  }
+
+  /* App bar adjustments */
+  .appbar {
+    height: 60px;
+    padding: 0 15px;
+  }
+
+  .admin-title {
+    font-size: 16px;
+  }
+
+  /* Cards - stack on mobile */
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .card h3 {
+    font-size: 12px;
+  }
+
+  .card h1 {
+    font-size: 24px;
+  }
+
+  /* Orders */
+  .order-card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .order-card h3 {
+    font-size: 14px;
+  }
+
+  /* Buttons */
+  button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* Forms */
+  input, textarea, select {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  /* Categories/Menu Grid */
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .category-card {
+    padding: 12px;
+  }
+
+  /* Tab labels smaller */
+  .mat-mdc-tab {
+    font-size: 12px;
+  }
+
+  /* Hero section */
+  .hero-section {
+    padding: 20px 15px;
+  }
+
+  .hero-section h1 {
+    font-size: 20px;
+  }
+
+  /* Menu grid on customer side */
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+  }
+
+  .menu-item-card {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .appbar {
+    height: 50px;
+    padding: 0 10px;
+  }
+
+  .admin-title {
+    font-size: 14px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding: 10px;
+  }
+
+  .order-card {
+    padding: 10px;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  input, textarea {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  table {
+    font-size: 11px;
+  }
+
+  table th, table td {
+    padding: 5px;
+  }
+}
+
+/* Landscape orientation */
+@media (max-height: 500px) {
+  .dashboard {
+    min-height: auto;
+  }
+
+  .sidebar {
+    max-height: calc(100vh - 50px);
+  }
+
+  .content {
+    max-height: calc(100vh - 50px);
+  }
+}

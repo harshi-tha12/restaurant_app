@@ -23,11 +23,6 @@ export const routes: Routes = [
     component:Dashboard
   },
 
-  {
-  path:'admin/dashboard',
-  component:Dashboard
-},
-
 // Add this route to your existing routes
 {
   path: 'menu',

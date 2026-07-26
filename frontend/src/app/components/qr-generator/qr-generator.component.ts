@@ -18,25 +18,31 @@ export class QrGeneratorComponent implements OnInit {
   ipAddress: string = '';
 
   ngOnInit() {
-    this.getLocalIP();
+    this.generateQRWithCurrentIP();
   }
 
-  getLocalIP() {
+  generateQRWithCurrentIP() {
     const admin = localStorage.getItem('admin');
     if (admin) {
       const adminData = JSON.parse(admin);
-      // Get your machine IP - replace with your actual IP
-      const ip = this.getDeviceIP();
-      this.ipAddress = ip;
-      this.restaurantUrl = `http://${ip}:4200/?restaurant=${adminData.id}`;
-      this.generateQR();
+      
+      // Get current IP dynamically
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          // Use public IP for production
+          this.ipAddress = data.ip;
+          this.restaurantUrl = `http://${data.ip}:4200/?restaurant=${adminData.id}`;
+          this.generateQR();
+        })
+        .catch(() => {
+          // Fallback: use window location
+          const hostname = window.location.hostname;
+          this.ipAddress = hostname;
+          this.restaurantUrl = `http://${hostname}:4200/?restaurant=${adminData.id}`;
+          this.generateQR();
+        });
     }
-  }
-
-  getDeviceIP(): string {
-    // Replace '192.168.x.x' with your actual machine IP
-    // You can find it by running: ipconfig (Windows) or ifconfig (Mac/Linux)
-    return '192.168.1.100'; // CHANGE THIS TO YOUR IP
   }
 
   generateQR() {
@@ -54,7 +60,8 @@ export class QrGeneratorComponent implements OnInit {
   printQR() {
     const printWindow = window.open('', '', 'height=500, width=500');
     if (printWindow) {
-      printWindow.document.write('<img src="' + this.qrCodeUrl + '" />');
+      printWindow.document.write('<img src="' + this.qrCodeUrl + '" style="width:100%; padding:20px;" />');
+      printWindow.document.write('<p style="text-align:center; margin-top:20px;">' + this.restaurantUrl + '</p>');
       printWindow.document.close();
       printWindow.print();
     }
