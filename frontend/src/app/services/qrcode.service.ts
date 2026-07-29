@@ -7,11 +7,12 @@ import QRCode from 'qrcode';
 export class QrcodeService {
 
   generateQRCode(text: string): Promise<string> {
-    return QRCode.toDataURL(text, {
+    // Generate a slightly larger QR (easier to scan on phones)
+    return QRCode.toDataURL(encodeURI(text), {
       errorCorrectionLevel: 'H',
       type: 'image/png',
-      width: 300,
-      margin: 1,
+      width: 500,   // larger for printing/scanning
+      margin: 2,
       color: {
         dark: '#000000',
         light: '#FFFFFF'
