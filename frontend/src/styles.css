@@ -204,3 +204,61 @@ body{
     max-height: calc(100vh - 50px);
   }
 }
+
+/* === MOBILE / GLOBAL FIXES === */
+html, body {
+  height: 100%;
+  -webkit-text-size-adjust: 100%; /* prevent iOS font autosizing surprises */
+}
+
+body {
+  overflow-x: hidden; /* avoid horizontal overflow when something is wider than viewport */
+}
+
+/* Make all replaced elements responsive */
+img, picture, video, canvas, svg, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Make tables scroll horizontally on small screens instead of breaking layout */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Utility: responsive grid fallback */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+/* Ensure root container uses box sizing and doesn't force fixed widths */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Add to your navbar or global styles */
+.sidebar {
+  transition: transform 0.25s ease;
+}
+.sidebar.mobile-hidden {
+  transform: translateX(-110%);
+}
+.sidebar.mobile-visible {
+  transform: translateX(0);
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  z-index: 1000;
+  width: 260px;
+}

@@ -1,166 +1,166 @@
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-.appbar{
+.appbar {
 
-    height:70px;
+    height: 70px;
 
-    background:#B71C1C;
+    background: #B71C1C;
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    padding:0 25px;
+    padding: 0 25px;
 
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
 
-    position:fixed;
+    position: fixed;
 
-    left:0;
+    left: 0;
 
-    right:0;
+    right: 0;
 
-    top:0;
+    top: 0;
 
-    z-index:1000;
+    z-index: 1000;
 
 }
 
-.menu-btn{
+.menu-btn {
 
-    background:none;
+    background: none;
 
-    border:none;
+    border: none;
 
-    cursor:pointer;
+    cursor: pointer;
     color: white;
 
 }
 
-.admin-title{
+.admin-title {
 
-    font-size:22px;
+    font-size: 22px;
 
-    font-weight:bold;
+    font-weight: bold;
 
-    color:white;
-
-}
-
-.dashboard{
-
-    margin-top:70px;
+    color: white;
 
 }
 
-.dashboard{
-    display:flex;
-    min-height:100vh;
-    background:#f5f5f5;
+.dashboard {
+
+    margin-top: 70px;
+
+}
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #f5f5f5;
 }
 
 /* Sidebar */
 
-.sidebar{
+.sidebar {
 
-    width:250px;
-    transition:.3s;
+    width: 250px;
+    transition: .3s;
 
-    background:#B71C1C;
+    background: #B71C1C;
 
-    color:white;
+    color: white;
 
-    padding:30px 20px;
+    padding: 30px 20px;
     overflow-y: auto;
     max-height: calc(100vh - 70px);
 
 }
 
-.sidebar h2{
+.sidebar h2 {
 
-    text-align:center;
+    text-align: center;
 
-    margin-bottom:40px;
-
-}
-
-.sidebar ul{
-
-    list-style:none;
-
-    padding:0;
+    margin-bottom: 40px;
 
 }
 
-.sidebar li{
+.sidebar ul {
 
-    display:flex;
+    list-style: none;
 
-    align-items:center;
-
-    gap:12px;
-
-    padding:15px;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    margin-bottom:10px;
+    padding: 0;
 
 }
 
-.sidebar li:hover{
+.sidebar li {
 
-    background:white;
+    display: flex;
 
-    color:#B71C1C;
+    align-items: center;
 
-}
+    gap: 12px;
 
-.active{
+    padding: 15px;
 
-    background:white;
+    border-radius: 10px;
 
-    color:#B71C1C;
+    cursor: pointer;
 
-}
-
-.sidebar.close{
-
-    width:95px;
+    margin-bottom: 10px;
 
 }
 
-.sidebar li{
+.sidebar li:hover {
 
-    transition:.3s;
+    background: white;
 
-}
-
-.sidebar.close li{
-
-    justify-content:center;
+    color: #B71C1C;
 
 }
 
-.sidebar.close h2{
+.active {
 
-    display:none;
+    background: white;
+
+    color: #B71C1C;
+
+}
+
+.sidebar.close {
+
+    width: 95px;
+
+}
+
+.sidebar li {
+
+    transition: .3s;
+
+}
+
+.sidebar.close li {
+
+    justify-content: center;
+
+}
+
+.sidebar.close h2 {
+
+    display: none;
 
 }
 
 /* Main */
 
-.content{
+.content {
 
-    flex:1;
+    flex: 1;
 
-    padding:30px;
+    padding: 30px;
     overflow-y: auto;
     max-height: calc(100vh - 70px);
 
@@ -168,95 +168,95 @@
 
 /* Top */
 
-.topbar{
+.topbar {
 
-    display:flex;
+    display: flex;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    align-items:center;
+    align-items: center;
 
 }
 
-.admin{
+.admin {
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    gap:10px;
+    gap: 10px;
 
-    font-size:18px;
+    font-size: 18px;
 
 }
 
 /* Cards */
 
-.cards{
+.cards {
 
-    display:grid;
+    display: grid;
 
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns: repeat(4, 1fr);
 
-    gap:20px;
+    gap: 20px;
 
-    margin:30px 0;
-
-}
-
-.card{
-
-    background:white;
-
-    border-radius:15px;
-
-    padding:20px;
-
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    margin: 30px 0;
 
 }
 
-.card h3{
+.card {
 
-    color:#777;
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
 
 }
 
-.card h1{
+.card h3 {
 
-    color:#B71C1C;
+    color: #777;
+
+}
+
+.card h1 {
+
+    color: #B71C1C;
 
 }
 
 /* Orders */
 
-.order-card{
+.order-card {
 
-    margin-top:20px;
+    margin-top: 20px;
 
-    background:white;
+    background: white;
 
-    border-radius:15px;
+    border-radius: 15px;
 
-    padding:20px;
+    padding: 20px;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
 
 }
 
-button{
+button {
 
-    background:#B71C1C;
+    background: #B71C1C;
 
-    color:white;
+    color: white;
 
-    border:none;
+    border: none;
 
-    padding:10px 20px;
+    padding: 10px 20px;
 
-    border-radius:8px;
+    border-radius: 8px;
 
-    cursor:pointer;
+    cursor: pointer;
     transition: 0.3s;
 
 }
@@ -271,7 +271,7 @@ table {
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 table th {
@@ -311,80 +311,83 @@ table tr:hover {
         display: none;
     }
 
+    /* Replace fixed 4-column grid with responsive grid */
     .cards {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
     }
 }
+    /* Logout Confirmation Dialog */
+    .logout-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
 
-/* Logout Confirmation Dialog */
-.logout-dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
+    .logout-dialog-box {
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+    }
 
-.logout-dialog-box {
-    background: white;
-    border-radius: 15px;
-    padding: 40px;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 400px;
-}
+    .logout-dialog-box h3 {
+        color: #B71C1C;
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
 
-.logout-dialog-box h3 {
-    color: #B71C1C;
-    font-size: 24px;
-    margin-bottom: 15px;
-}
+    .logout-dialog-box p {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 25px;
+    }
 
-.logout-dialog-box p {
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 25px;
-}
+    .dialog-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
 
-.dialog-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
+    .btn-confirm {
+        background: #B71C1C;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-.btn-confirm {
-    background: #B71C1C;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
+    .btn-confirm:hover {
+        background: #7d1414;
+    }
 
-.btn-confirm:hover {
-    background: #7d1414;
-}
+    .btn-cancel {
+        background: #e0e0e0;
+        color: #333;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-.btn-cancel {
-    background: #e0e0e0;
-    color: #333;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-cancel:hover {
-    background: #bdbdbd;
-}
+    .btn-cancel:hover {
+        background: #bdbdbd;
+    }
