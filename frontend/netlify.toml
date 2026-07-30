@@ -1,4 +1,10 @@
+# netlify.toml (repo root)
 [build]
   base = "frontend"
-  command = "npm run build"
-  publish = "dist/frontend"
+  command = "npm run build -- --configuration production"
+  publish = "dist/frontend/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
