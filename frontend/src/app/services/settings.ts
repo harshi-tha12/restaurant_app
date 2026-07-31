@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SettingsService {
-  private apiUrl = 'http://localhost:5000/api/settings';
+  private apiUrl = 'https://foodie-qr-restaurant-app.onrender.com/api/settings';
 
   constructor(private http: HttpClient) {}
 

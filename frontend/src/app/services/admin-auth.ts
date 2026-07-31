@@ -8,7 +8,7 @@ export class AdminAuthService {
 
   private http = inject(HttpClient);
 
-  private api = 'http://localhost:5000/api/admin';
+  private api = 'https://foodie-qr-restaurant-app.onrender.com/api/admin';
 
   login(data: any) {
     return this.http.post(`${this.api}/login`, data);

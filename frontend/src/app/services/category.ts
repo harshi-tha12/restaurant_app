@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class CategoryService {
 
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/categories';
+  private apiUrl = 'https://foodie-qr-restaurant-app.onrender.com/api/categories';
 
   // Get all categories
   getCategories(): Observable<any> {
