@@ -1,5 +1,7 @@
+// frontend/src/app/services/admin-auth.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +10,12 @@ export class AdminAuthService {
 
   private http = inject(HttpClient);
 
-  private api = 'https://foodie-qr-restaurant-app.onrender.com/api/admin';
+  // Use the backend base URL from environment
+  private api = `${environment.baseUrl.replace(/\/$/, '')}/api/admin`;
 
   login(data: any) {
-    return this.http.post(`${this.api}/login`, data);
+    // If your backend uses cookies for auth, you might need { withCredentials: true }
+    return this.http.post(`${this.api}/login`, data /*, { withCredentials: true } */);
   }
 
 }
