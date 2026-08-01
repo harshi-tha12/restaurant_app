@@ -5,6 +5,7 @@ import { CategoryService } from '../../../services/category';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Orders } from '../../../services/order';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-customer-menu',
@@ -50,34 +51,44 @@ export class CustomerMenu implements OnInit, OnDestroy {
   }
 
   loadCategories() {
-  console.log('📥 Starting to load categories...');
-  this.isLoading = true;
+    console.log('📥 Starting to load categories...');
+    this.isLoading = true;
 
-  this.categoryService.getCategories().subscribe({
-    next: (res: any) => {
-      console.log('✅ Categories API Response:', res);
+    this.categoryService.getCategories().subscribe({
+      next: (res: any) => {
+        console.log('✅ Categories API Response:', res);
 
-      this.categories =
-        Array.isArray(res) ? res :
-        Array.isArray(res?.data) ? res.data :
-        Array.isArray(res?.categories) ? res.categories :
-        [];
+        this.categories =
+          Array.isArray(res) ? res :
+          Array.isArray(res?.data) ? res.data :
+          Array.isArray(res?.categories) ? res.categories :
+          [];
 
-      console.log('✅ Categories loaded:', this.categories.length);
+        console.log('✅ Categories loaded:', this.categories.length);
 
-      this.selectedCategory = this.categories.length > 0 ? this.categories[0].id : null;
-      this.carouselIndex = 0;
-      this.updateVisibleCount();
-      this.isLoading = false;
-    },
-    error: (err) => {
-      console.error('❌ Error loading categories:', err);
-      this.categories = [];
-      this.selectedCategory = null;
-      this.isLoading = false;
-    }
-  });
-}
+        this.selectedCategory = this.categories.length > 0 ? this.categories[0].id : null;
+        this.carouselIndex = 0;
+        this.updateVisibleCount();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('❌ Error loading categories:', err);
+        this.categories = [];
+        this.selectedCategory = null;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Resolve image URL: return absolute URL if needed
+  resolveImageUrl(imagePath: string | null | undefined): string {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+    const base = environment.baseUrl.replace(/\/$/, ''); // remove trailing slash
+    const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+    return `${base}${path}`;
+  }
+
   selectCategory(categoryId: number) {
     this.selectedCategory = categoryId;
   }

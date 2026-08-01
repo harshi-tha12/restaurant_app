@@ -27,8 +27,7 @@
                         [class.active]="selectedCategory === category.id" (click)="selectCategory(category.id)">
                         <!-- Get first item image as category image -->
                         <div class="category-image">
-                            <img *ngIf="category.items && category.items[0]?.image" [src]="category.items[0].image"
-                                alt="{{ category.name }}" />
+                           <img *ngIf="category.items && category.items[0]?.image" [src]="resolveImageUrl(category.items[0].image)" alt="{{ category.name }}" />
                             <div *ngIf="!category.items || !category.items[0]?.image" class="no-image">
                                 🍽️
                             </div>
@@ -70,13 +69,10 @@
                 <div *ngFor="let item of getSelectedCategoryItems()" class="menu-item-card">
                     <!-- Item Image -->
                     <div class="item-image-wrapper">
-                        <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" class="item-image" />
+                        <img *ngIf="item.image" [src]="resolveImageUrl(item.image)" alt="{{ item.name }}" class="item-image" />
                         <div *ngIf="!item.image" class="no-image">📷</div>
 
-                        <!-- Veg/Non-Veg Badge -->
-                        <div class="veg-badge" [class.non-veg]="!item.isVeg">
-                            {{ item.isVeg ? '🌱 VEG' : '🍗 NON-VEG' }}
-                        </div>
+                    
 
                         <!-- Availability Badge -->
                         <div class="availability-badge" *ngIf="!item.isAvailable">

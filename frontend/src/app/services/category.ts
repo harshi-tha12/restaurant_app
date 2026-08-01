@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 export class CategoryService {
 
   private http = inject(HttpClient);
-  private apiUrl = 'https://foodie-qr-restaurant-app.onrender.com/api/categories';
+  private apiUrl = `${environment.baseUrl}/api/categories`;
 
   // Get all categories
   getCategories(): Observable<any> {
