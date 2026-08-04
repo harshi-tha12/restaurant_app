@@ -2,6 +2,11 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
+function getEnvCert() {
+  if (!process.env.AIVEN_CA) return null;
+  return process.env.AIVEN_CA.replace(/\\n/g, '\n');
+}
+
 const connectionConfig = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : undefined,
@@ -10,23 +15,24 @@ const connectionConfig = {
   database: process.env.DB_NAME,
 };
 
-// If you provide the Aiven CA certificate (PEM) in an env var, use it:
-if (process.env.AIVEN_CA) {
+// SSL handling: prefer AIVEN_CA for secure connection
+const caPem = getEnvCert();
+if (caPem) {
   connectionConfig.ssl = {
-    ca: process.env.AIVEN_CA,
+    ca: caPem,
     rejectUnauthorized: true
   };
 } else if (process.env.DB_SSL === 'false' || process.env.DB_SSL === '0') {
-  // explicit disable (not recommended for production)
-  // leave no ssl config
+  // explicit disable (not recommended)
 } else {
-  // by default, allow non-strict SSL (matches previous behavior)
+  // fallback to non-strict ssl (previous behavior)
   connectionConfig.ssl = { rejectUnauthorized: false };
 }
 
+// Use a pool for robustness
 const db = mysql.createPool(connectionConfig);
 
-// Quick connection test and log
+// quick connection test and log
 db.getConnection((err, connection) => {
   if (err) {
     console.error('❌ Database connection failed:', err);
