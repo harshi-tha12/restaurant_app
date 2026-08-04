@@ -27,8 +27,14 @@ app.use('/api/settings', settingsRoutes);
 const orderRoutes = require('./routes/orderRoutes');
 app.use('/api/orders', orderRoutes);
 
-app.get('/', (req, res) => {
-    res.send('Restaurant Ordering API Running 🚀');
+app.get('/health', (req, res) => {
+    db.query('SELECT 1 + 1 AS ok', (err, result) => {
+        if (err) {
+            console.error('Health DB check failed:', err);
+            return res.status(500).json({ ok: false, db: false, error: err.message });
+        }
+        return res.json({ ok: true, db: true });
+    });
 });
 
 const PORT = process.env.PORT || 5000;

@@ -31,7 +31,7 @@ exports.getCategories = (req, res) => {
     // Transform flat results into nested structure
     const categories = [];
     const categoryMap = {};
-    const BASE_URL = `http://localhost:5000`; // ✅ Add base URL
+    const BASE_URL = process.env.BASE_URL || null;   // ✅ Add base URL
 
     results.forEach(row => {
       if (!categoryMap[row.category_id]) {
@@ -44,10 +44,14 @@ exports.getCategories = (req, res) => {
       }
 
       if (row.dish_id) {
-        // ✅ Convert relative image path to full URL
-        let imageUrl = row.image_url;
-        if (imageUrl && !imageUrl.startsWith('http')) {
-          imageUrl = `${BASE_URL}${imageUrl}`;
+        // detect common image fields from different imports
+        let imageUrl = row.image_url || row.image || row.imagePath || null;
+
+        if (imageUrl && !/^https?:\/\//i.test(imageUrl)) {
+          // prefer explicit BASE_URL env var; otherwise fallback to request host at runtime
+          const hostBase = BASE_URL || (req && req.protocol && req.get ? `${req.protocol}://${req.get('host')}` : '');
+          // ensure leading slash
+          imageUrl = `${hostBase}${imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`}`;
         }
 
         categoryMap[row.category_id].items.push({
@@ -55,9 +59,9 @@ exports.getCategories = (req, res) => {
           name: row.dish_name,
           ingredients: row.ingredients,
           price: row.price,
-          image: imageUrl, // ✅ Full URL now
-          isVeg: row.is_veg,
-          isAvailable: row.is_available
+          image: imageUrl,
+          isVeg: !!row.is_veg,
+          isAvailable: !!row.is_available
         });
       }
     });
@@ -82,12 +86,13 @@ exports.addCategory = (req, res) => {
 
   const sql = 'INSERT INTO categories (category_name) VALUES (?)';
 
-  db.query(sql, [name.trim()], (err, result) => {
+  db.query(sql, (err, results) => {
     if (err) {
-      console.error('Database error:', err);
+      console.error('Database error in getCategories:', err);
       return res.status(500).json({
         success: false,
-        message: 'Failed to add category'
+        message: 'Failed to fetch categories',
+        error: err.message
       });
     }
 
@@ -163,7 +168,7 @@ exports.addItem = (req, res) => {
   if (req.file) {
     const fileName = `${Date.now()}-${req.file.originalname}`;
     const filePath = path.join(uploadsDir, fileName);
-    
+
     try {
       // Save file to uploads folder
       fs.writeFileSync(filePath, req.file.buffer);
