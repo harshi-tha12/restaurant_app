@@ -21,6 +21,9 @@ router.delete('/:id', categoryController.deleteCategory);
 // POST dish to category with image upload
 router.post('/:categoryId/items', upload.single('image'), categoryController.addItem);
 
+// PUT update existing dish (optional image upload)
+router.put('/:categoryId/items/:itemId', upload.single('image'), categoryController.updateItem);
+
 // DELETE dish
 router.delete('/:categoryId/items/:itemId', categoryController.deleteItem);
 

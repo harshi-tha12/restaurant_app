@@ -8,7 +8,7 @@
   </div>
 
   <!-- Success Messages (Main Page) -->
-  <div *ngIf="successMessage" class="alert alert-success" [@fadeInOut]>
+  <div *ngIf="successMessage" class="alert alert-success">
     {{ successMessage }}
   </div>
 
@@ -27,9 +27,6 @@
       <div class="items-container">
         <!-- Items Grid -->
         <div *ngFor="let item of category.items" class="item-card">
-          <button class="btn-delete-item" (click)="deleteItem(category.id, item.id)" title="Delete item">
-            ✕
-          </button>
           <div class="item-image">
             <img *ngIf="item.image" [src]="item.image" alt="{{ item.name }}" />
             <div *ngIf="!item.image" class="no-image">📷</div>
@@ -37,9 +34,29 @@
           <div class="item-details">
             <h3>{{ item.name }}</h3>
             <p class="price">₹{{ item.price }}</p>
-            <p class="ingredients" *ngIf="item.ingredients" [title]="item.ingredients">
-              {{ item.ingredients }}
+            <p class="ingredients" *ngIf="item.ingredients" [title]="joinIngredients(item)">
+              {{ joinIngredients(item) }}
             </p>
+            <!-- Veg/Non-Veg Badge (only when value present) -->
+            <div *ngIf="item.isVeg !== null && item.isVeg !== undefined" class="veg-badge"
+              [class.non-veg]="!item.isVeg">
+              {{ item.isVeg ? '🌱 VEG' : '🍗 NON-VEG' }}
+            </div>
+            <div *ngIf="!item.isAvailable" class="badge badge-warning">Unavailable</div>
+
+            <!-- Edit action (icon) -->
+            <!-- Edit/Delete actions for this item (uses Material Icons) -->
+            <div class="item-actions">
+              <button class="btn-icon-edit" title="Edit" (click)="editItem(category.id, item)">
+                <span class="material-icons" aria-hidden="true">edit</span>
+                <span class="sr-only">Edit item</span>
+              </button>
+
+              <button class="btn-icon-delete" title="Delete" (click)="deleteItem(category.id, item.id)">
+                <span class="material-icons" aria-hidden="true">delete</span>
+                <span class="sr-only">Delete item</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -69,13 +86,8 @@
         <!-- Category Name -->
         <div class="form-group">
           <label for="categoryName">Category Name *</label>
-          <input
-            type="text"
-            id="categoryName"
-            [(ngModel)]="categoryForm.name"
-            placeholder="e.g., Pizza, Burgers, Desserts"
-            class="form-control"
-          />
+          <input type="text" id="categoryName" [(ngModel)]="categoryForm.name"
+            placeholder="e.g., Pizza, Burgers, Desserts" class="form-control" />
         </div>
       </div>
 
@@ -88,11 +100,11 @@
     </div>
   </div>
 
-  <!-- Add Item Form Modal -->
+  <!-- Add/Edit Item Form Modal -->
   <div *ngIf="showItemForm" class="modal-overlay" (click)="closeItemForm()">
     <div class="modal-content item-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2>Add New Item</h2>
+        <h2>{{ editingItemId ? 'Edit Item' : 'Add New Item' }}</h2>
         <button class="btn-close" (click)="closeItemForm()">✕</button>
       </div>
 
@@ -105,55 +117,55 @@
         <!-- Dish Name -->
         <div class="form-group">
           <label for="dishName">Dish Name *</label>
-          <input
-            type="text"
-            id="dishName"
-            [(ngModel)]="itemForm.name"
-            placeholder="e.g., Cheese Pizza, Margherita"
-            class="form-control"
-          />
+          <input type="text" id="dishName" [(ngModel)]="itemForm.name" placeholder="e.g., Cheese Pizza, Margherita"
+            class="form-control" />
         </div>
 
         <!-- Ingredients (Single Textarea) -->
         <div class="form-group">
-          <label for="ingredientsText">Ingredients (3-6) *</label>
+          <label for="ingredientsText">Ingredients</label>
           <p class="ingredient-help">Add one ingredient per line</p>
-          <textarea
-            id="ingredientsText"
-            [(ngModel)]="itemForm.ingredientsText"
-            placeholder="Mozzarella cheese&#10;Tomato sauce&#10;Fresh basil&#10;Olive oil&#10;Salt &amp; Pepper"
-            class="form-control ingredient-textarea"
-            rows="6"
-          ></textarea>
+          <textarea id="ingredientsText" [(ngModel)]="itemForm.ingredientsText"
+            placeholder="Mozzarella cheese&#10;Tomato sauce&#10;Fresh basil" class="form-control ingredient-textarea"
+            rows="6"></textarea>
           <small class="form-text">
             Ingredients: {{ itemForm.ingredientsText.split('\n').filter(ing => ing.trim()).length }}/6
           </small>
         </div>
 
+        <!-- Veg / Non-veg / Don't show -->
+        <div class="form-group">
+          <label>Veg Option</label>
+          <div class="veg-options">
+            <label><input type="radio" name="vegOption" [(ngModel)]="itemForm.vegOption" value="dont_show" /> Don't
+              show</label>
+            <label><input type="radio" name="vegOption" [(ngModel)]="itemForm.vegOption" value="veg" /> Veg</label>
+            <label><input type="radio" name="vegOption" [(ngModel)]="itemForm.vegOption" value="nonveg" />
+              Non-veg</label>
+          </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="itemForm.isAvailable" />
+            Available
+          </label>
+        </div>
+
         <!-- Price -->
         <div class="form-group">
-          <label for="itemPrice">Price (₹) *</label>
-          <input
-            type="number"
-            id="itemPrice"
-            [(ngModel)]="itemForm.price"
-            placeholder="e.g., 250"
-            class="form-control"
-            min="0"
-          />
+          <label for="itemPrice">Price (₹)</label>
+          <input type="number" id="itemPrice" [(ngModel)]="itemForm.price" placeholder="e.g., 250" class="form-control"
+            min="0" />
         </div>
 
         <!-- Item Image -->
         <div class="form-group">
-          <label for="itemImage">Item Image *</label>
+          <label for="itemImage">Item Image {{ editingItemId ? '(optional)' : '*' }}</label>
           <div class="image-upload">
-            <input
-              type="file"
-              id="itemImage"
-              accept="image/*"
-              (change)="onItemImageSelect($event)"
-              class="file-input"
-            />
+            <input type="file" id="itemImage" accept="image/*" (change)="onItemImageSelect($event)"
+              class="file-input" />
             <label for="itemImage" class="upload-label">
               📸 Choose Image
             </label>
@@ -167,7 +179,7 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" (click)="closeItemForm()">Cancel</button>
         <button class="btn btn-primary" (click)="addItem()" [disabled]="isLoading">
-          {{ isLoading ? 'Adding...' : 'Add Item' }}
+          {{ isLoading ? (editingItemId ? 'Updating...' : 'Adding...') : (editingItemId ? 'Update Item' : 'Add Item') }}
         </button>
       </div>
     </div>

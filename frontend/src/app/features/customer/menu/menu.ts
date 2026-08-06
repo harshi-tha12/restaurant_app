@@ -5,7 +5,7 @@ import { CategoryService } from '../../../services/category';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Orders } from '../../../services/order';
-import { environment } from '../../../../environment/environment';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-customer-menu',
@@ -20,6 +20,7 @@ export class CustomerMenu implements OnInit, OnDestroy {
   private router = inject(Router);
   private http = inject(HttpClient);
   private orderService = inject(Orders);
+  private sanitizer = inject(DomSanitizer);
 
   categories: any[] = [];
   cart: any[] = [];
@@ -64,6 +65,30 @@ export class CustomerMenu implements OnInit, OnDestroy {
           Array.isArray(res?.categories) ? res.categories :
           [];
 
+        // Sanitize/prepare images for Angular bindings (data URLs or external URLs)
+        this.categories.forEach((cat: any) => {
+          if (cat.items && Array.isArray(cat.items)) {
+            cat.items = cat.items.map((item: any) => {
+              const image = item.image || null; // could be data URL or external URL
+              let imageSafe: SafeUrl | null = null;
+              if (image) {
+                try {
+                  imageSafe = this.sanitizer.bypassSecurityTrustUrl(image);
+                } catch (e) {
+                  console.warn('Image sanitization failed for item', item.id, e);
+                  imageSafe = null;
+                }
+              }
+
+              // Normalize isVeg/isAvailable if backend didn't already
+              const isVeg = item.isVeg === null ? null : !!item.isVeg;
+              const isAvailable = item.isAvailable === undefined ? true : !!item.isAvailable;
+
+              return { ...item, imageSafe, isVeg, isAvailable };
+            });
+          }
+        });
+
         console.log('✅ Categories loaded:', this.categories.length);
 
         this.selectedCategory = this.categories.length > 0 ? this.categories[0].id : null;
@@ -80,13 +105,42 @@ export class CustomerMenu implements OnInit, OnDestroy {
     });
   }
 
-  // Resolve image URL: return absolute URL if needed
-  resolveImageUrl(imagePath: string | null | undefined): string {
-    if (!imagePath) return '';
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
-    const base = environment.baseUrl.replace(/\/$/, ''); // remove trailing slash
-    const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
-    return `${base}${path}`;
+  // New helper to format ingredients as a comma-separated string.
+  // Accepts:
+  // - Array -> joins with ", "
+  // - JSON string like '["a","b"]' -> parses and joins
+  // - plain string -> returns trimmed string
+  formatIngredients(item: any): string {
+    if (!item) return '';
+    const value = item.ingredients;
+    if (!value) return '';
+
+    if (Array.isArray(value)) {
+      return value.join(', ');
+    }
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      // try parse JSON if it's JSON-encoded
+      if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || trimmed.startsWith('"[')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) return parsed.join(', ');
+          // sometimes double-encoded: parsed is a string like '["a","b"]'
+          if (typeof parsed === 'string') {
+            try {
+              const parsed2 = JSON.parse(parsed);
+              if (Array.isArray(parsed2)) return parsed2.join(', ');
+            } catch (_e) { /* ignore */ }
+          }
+        } catch (_e) {
+          // not valid JSON, fall through to return the original string
+        }
+      }
+      return trimmed;
+    }
+
+    return String(value);
   }
 
   selectCategory(categoryId: number) {

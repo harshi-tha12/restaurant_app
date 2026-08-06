@@ -1,14 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Orders {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.baseUrl}/api/orders`;
+  private apiUrl = 'http://localhost:5000/api/orders';
 
   createOrder(order: any): Observable<any> {
     return this.http.post(this.apiUrl, order);
