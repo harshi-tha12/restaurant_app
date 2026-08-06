@@ -2,12 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+const runtime = (window as any).__env || {};
+const API_BASE = runtime.API_URL || 'http://localhost:5000';
+
 @Injectable({
   providedIn: 'root',
 })
 export class Orders {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/orders';
+  private apiUrl = `${API_BASE}/api/orders`;
 
   createOrder(order: any): Observable<any> {
     return this.http.post(this.apiUrl, order);

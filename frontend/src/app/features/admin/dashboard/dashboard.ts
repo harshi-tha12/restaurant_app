@@ -1,3 +1,4 @@
+//admin/dashboard.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -9,6 +10,9 @@ import { ReloadService } from '../../../services/reload.service';
 import { HttpClient } from '@angular/common/http';
 import { Orders } from '../../../services/order';
 import { QrGeneratorComponent } from '../../../components/qr-generator/qr-generator.component';
+
+const runtime = (window as any).__env || {};
+const API_BASE = runtime.API_URL || 'http://localhost:5000';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +27,7 @@ export class Dashboard implements OnInit {
   private reloadService = inject(ReloadService);
   private http = inject(HttpClient);
   private orderService = inject(Orders);
-  
+
   isSidebarOpen = true;
   selectedPage = 'dashboard';
   adminName: string = '';
@@ -32,7 +36,7 @@ export class Dashboard implements OnInit {
   newOrders: any[] = [];
   pastOrders: any[] = [];
   showLogoutConfirm = false;
-  
+
   // Statistics
   totalOrders: number = 0;
   totalRevenue: number = 0;
@@ -76,11 +80,11 @@ export class Dashboard implements OnInit {
 
   loadStatistics() {
     console.log('📊 Loading statistics...');
-    
-    this.http.get<any>('http://localhost:5000/api/orders/statistics').subscribe({
+
+    this.http.get<any>(`${API_BASE}/api/orders/statistics`).subscribe({
       next: (res) => {
         console.log('✅ Statistics loaded:', res);
-        
+
         if (res.success) {
           this.totalOrders = res.data.totalOrders || 0;
           this.totalRevenue = res.data.totalRevenue || 0;

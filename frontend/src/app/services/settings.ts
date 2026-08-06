@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+const runtime = (window as any).__env || {};
+const API_BASE = runtime.API_URL || 'http://localhost:5000';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
-  private apiUrl = 'https://foodie-qr-restaurant-app.onrender.com/api/settings';
+  private apiUrl = `${API_BASE}/api/settings`;
 
   constructor(private http: HttpClient) {}
 
