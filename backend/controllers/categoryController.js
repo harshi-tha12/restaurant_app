@@ -1,11 +1,8 @@
+//categoryController.js
 const db = require('../config/db');
 const path = require('path');
 const fs = require('fs');
 
-// Note: images are stored in the DB as base64 data URLs in the `image` LONGTEXT column.
-// Ensure is_veg column allows NULL if you want 'don't show' behaviour.
-
-// GET all categories with dishes
 exports.getCategories = (req, res) => {
   const sql = `
     SELECT c.category_id, c.category_name, 

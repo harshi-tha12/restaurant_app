@@ -2,13 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// Runtime API URL injected into index.html by set-env.js (or falls back to localhost)
+const runtime = (window as any).__env || {};
+const API_BASE = runtime.API_URL || 'http://localhost:5000';
+
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5000/api/categories';
+  private apiUrl = `${API_BASE}/api/categories`;
 
   // Get all categories
   getCategories(): Observable<any> {

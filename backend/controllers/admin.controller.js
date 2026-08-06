@@ -1,3 +1,4 @@
+//admin.controller.js
 const db = require('../config/db');
 
 exports.login = (req, res) => {
