@@ -2,5 +2,5 @@
 // Replace baseUrl with your deployed app domain (use https)
 export const environment = {
   production: true,
-  baseUrl: 'https://fffoooddiiee.netlify.app/' // <-- change this to your deployed URL
+  baseUrl: 'https://restaurantfoodieappqr.netlify.app' // <-- change this to your deployed URL
 };
